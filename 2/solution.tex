@@ -17,7 +17,50 @@
 
 \section{Feistel Networks \& DES}
 \begin{paragraph}
-	a Placeholder
+	a For a round-function $f = 0$ of a Feistel network, we get that for the i-th round, with
+	input $(L_i, R_i)$ the output of $(R_i, L_i\oplus f(R_i, K_i)) = (R_i, L_i\oplus 0) = 
+	(R_i, L_i)$. So for a r-round network, the output will be $(L_0, R_0)$ for an even r, and
+	$(R_0, L_0)$ for an odd r.
+\end{paragraph}
+
+\begin{paragraph}
+	b For a round-function $f(x) = x$ we'll get the following outputs for first three rounds - 
+	$y_1 = (R_0, L_0\oplus R_0)$, $y_2 = (L_0\oplus R_0, L_0)$, $y_3 = (L_0, R_0)$. What we find
+	is a 3 round cycle. So for a r-round network we get -
+	\begin{equation*}
+	y_r = 
+		\begin{cases}
+			(L_0, R_0), & \mbox{if } r \;\bmod\; 3 = 0 \\
+			(R_0, L_0\oplus R_0), & \mbox{if } r \;\bmod\; 3 = 1 \\
+			(L_0\oplus R_0, L_0), & \mbox{if } r \;\bmod\; 3 = 2 
+		\end{cases}	
+	\end{equation*}
+\end{paragraph}
+
+\begin{paragraph}
+	c First we'll compute Feistel$_{f_1,f_2}(L_0, R_0)$ -
+	\begin{align*}
+		y_1 &= (R_0, L_0\oplus f_1(R_0)) \\
+		y_2 &= {Feistel}_{f_1,f_2}(L_0, R_0) = (L_0\oplus f_1(R_0), R_0\oplus f_2(L_0\oplus f_1(R_0)))
+	\end{align*}
+	
+	Now, for Feistel$_{f_2,f_1}(R_2, L_2)$. After one round we get - 
+	\begin{align*}
+		y'_1 &= (L_0\oplus f_1(R_0), R_0\oplus f_2(L_0\oplus f_1(R_0))\oplus f_2(L_0\oplus f_1(R_0))) \\
+	  &= (L_0\oplus f_1(R_0), R_0)
+	\end{align*}
+	After the second round we get - 
+	\begin{align*}
+		y'_2 &= (R_0, L_0\oplus f_1(R_0) \oplus f_1(R_0)) = (R_0, L_0)
+	\end{align*}
+\end{paragraph}
+
+\begin{paragraph}
+	d DES is a 16-round Feistel network.
+\end{paragraph}
+
+\begin{paragraph}
+	e H
 \end{paragraph}
 
 \section{Enhancing DES}
