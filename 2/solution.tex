@@ -27,7 +27,37 @@
 
 \section{Tweaking AES}
 \begin{paragraph}
-	a Placeholder
+	a The SubBytes stage of the AES algorithm is its source of non-linearity.
+	Hence, removing this stage makes the 'tweaked' AES linear.
+	We can build a set of 128 linear equations for each bit of the output. And after 128 inputs
+	solve that set. After that we can distinguish between a random function and the modified-AES
+	by checking if the cipher-text adheres to that set of equations.
+\end{paragraph}
+
+\begin{paragraph}
+	b The MixColumns stage of the AES algorithm is a source of diffusion.
+	An attack on this modification may give two inputs that have the same first-row and
+	check whether the outputs have an identical row.
+\end{paragraph}
+
+\begin{paragraph}
+	c The ShiftRows stage of the AES algorithm is a source of diffusion.
+	Similar to the previous, replacing rows with columns, an attack on this modification
+	 may give two inputs that have the same first-column and check whether the outputs
+	 have an identical column.
+\end{paragraph}
+
+\begin{paragraph}
+	d Combining all operations of the same type significantly weakens the AES scheme.
+	The updated AES is equivalent to ${E(M) = M'\oplus K}$, where $M'$ is a computable function
+	on $M$, comprised of the first three stages - 10 SubBytes, 10 ShiftRows and 9 MixColumns, which
+	are independent of the secret key. And $K$ is the XOR of all the subkeys
+	from the 11 AddRoundKey operations. Since we can compute $M'$ ourselves, this scheme is 
+	the same as using a secret key to XOR your messages, which we've seen to be unsafe.
+	An example of an attack would be to pass a message $M$ and then xor-ing the output with
+	$M'$ to compute $K$. For a following message we do the same and check if we get the 
+	same key, allowing us the distinguish between the modified AES and a random function.
+
 \end{paragraph}
 
 \section{MACs}
@@ -37,7 +67,12 @@
 
 \section{Extending hash functions from fixed length to variable length messages}
 \begin{paragraph}
-	a Placeholder
+	a Note that $H(M) = h(y_s, m_s)$. Meaning that finding $M_1,M_2$ such that $H(M_1) = H(M_2)$
+	is equivalent to finding $h(y^1_s, m^1_s) = h(y^2_s, m^2_s)$.
+	An adversary $\mathcal{A}'$ can use the same algorithm $\mathcal{A}$ uses for $s = 1$, and output
+	$y_1m_1, y_2m_2$.
+	Since $\mathcal{A}'$ does one iteration where $\mathcal{A}$ does $s$ iterations, its
+	complexity is $\frac{t_A}{s}$.
 \end{paragraph}
 
 \section{CBC-MAC}
