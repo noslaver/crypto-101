@@ -65,7 +65,16 @@
 
 \section{Enhancing DES}
 \begin{paragraph}
-	a Placeholder
+	{$DES^V:$} Assume we have a moderate $\geq$ 2 number of messages, $M_i$, and their encryptions, $C_i = DES^V_{k, k_1}(M_i) = DES_k(M_i) \oplus k_1$. Do the following for each possible value of $k$, denoted $k'$:
+	
+	Encrypt $M_1$ using $DES_{k'}$, and get $k'_1 = DES_k(M_1) \oplus k_1 \oplus DES_{k'}(M_1)$. Next calculate $C'_2 = DES_k(M_1) \oplus k_1 \oplus k'_1$, and decrypt it using $DES_{k'}$. If we got $M_2$ at the end, it means the odds of 
+	$k = k', k_1 = k'_1$. We can run $DES^V_{k', k'_1}$ on a few more messages, if we want to be certain that we found the right pair of keys. Since we are going solely over the possibilities for the first key $k$, it will take in the order of $2^{56}$ $DES$ encryptions and decryptions to find the correct pair of keys.
+\end{paragraph}
+
+\begin{paragraph}
+    {$DES^{W}:$} Again assume a moderate $\geq$ 2 number of messages $M_i$ and their encryptions $C_{i} = DES^{W}_{k, k_1}(M_i) = DES_{k}(M_i \oplus k_1)$. For each possible value of $k$, denoted again as $k'$, do the following:
+    
+    Decrypt $C_1$ using $DES_{k'}$, and calculate $k'_1 = DES^{-1}_{k'}(DES_k(M_1 \oplus k_1)) \oplus M_1$. Then encrypt $M_2$ using $DES^W_{k', k'_1}$, getting $C'_2 = DES_{k'}(M_2 \oplus k'_1)$. If we get $C'_2 = C_2$, it means again that $k' = k, k'_1 = k_1$. Once more we can run $DES^W_{k', k'_1}$ to assure ourselves that we got the right combination of keys. As was the case with $DES^V$, we need in the order of $2^{56}$ $DES$ encryptions/decryptions to break the cipher.
 \end{paragraph}
 
 \section{Tweaking AES}
@@ -105,7 +114,65 @@
 
 \section{MACs}
 \begin{paragraph}
-	a Placeholder
+	a To break the $OFB-MAC$, one would only have to query once, on $m$ and receive $OFB-MAC_k(m) = E_k(...(E_k(S_0)...) \oplus m$, and output a new pair $(m' \neq m, OFB-MAC_k(m) \oplus m \oplus m')$, where $|m| = |m'|$.
+	\begin{align*}
+	    OFB-MAC_k(m) \oplus m \oplus m' &= E_k(...(E_k(S_0)...) \oplus m \oplus m \oplus m'\\
+	    &= E_k(...(E_k(S_0)...) \oplus m'\\
+	    &= OFB-MAC_k(m')
+	\end{align*}
+	
+	We have successfully outputted a new pair $(m', OFB-MAC_k(m'))$, meaning we have broken the $OFB-MAC$.
+\end{paragraph}
+
+\begin{paragraph}
+    b To break this $CBC-MAC$, one would have to go the extra mile, and make 3 queries. Query the $MAC$ on three messages, namely $m_1, m_2, m_3 = m_1 || 1 || m_4$, with $m_1 \neq m_2, \quad |m_1| = |m_2| = |m_4| = 1$ block, and getting back
+    \begin{align*}
+        CBC-MAC_k(m_1, |m_1|) &= t_1\\
+        CBC-MAC_k(m_2, |m_2|) &= t_2\\
+        CBC-MAC_k(m_3, |m_3|) &= t_3
+    \end{align*}
+    
+    Output a new pair $(m', t')$, with $m' = m_2 || 1 || m_4 \oplus t_1 \oplus t_2$, and $t' = t_2$. Note here that $||$ means concatenation, and the number 1 is represented by a block's length of bits, according to $E$.
+    \begin{align*}
+        E_k(E_k(m_2) \oplus 1) &= t_2\\
+        E_k(E_k(m_1) \oplus 1) &= t_1\\
+        E_k(E_k(E_k(m_2) \oplus 1) \oplus (m_4 \oplus t_1 \oplus t_2)) &= E_k(t_2 \oplus m_4 \oplus t_1 \oplus t_2)\\
+        &= E_k(m_4 \oplus t_1)\\
+        E_k(E_k(E_k(m_1) \oplus 1) \oplus m_4) &= E_k(t_1 \oplus m_4)
+    \end{align*}
+    
+    Since $|m'| = |m_3|$, $CBC-MAC_k(m', |m'|) = CBC-MAC_k(m_3, |m_3|)$. Thus we have outputted a valid new pair, breaking this $CBC-MAC$.
+\end{paragraph}
+
+\begin{paragraph}
+    c For this $CBC-MAC$, we're back to needing a single query to break it. Query the $MAC$ on $m$, a single block message, to get back $(S_0, t)$. Now output a new pair $(m', (S'_0, t))$, with $m' = m \oplus S_0 \oplus S'_0$ and $S'_0$ being a new initialization vector, different than $S_0$. Assuming the chosen initialization vector is $S'_0$, we get
+    \begin{align*}
+        CBC-MAC_k^{S'_0}(m') &= CBC-MAC_k^{S'_0}(m \oplus S_0 \oplus S'_0)\\
+        &= E_k(m \oplus S_0 \oplus S'_0 \oplus S'_0)\\
+        &= E_k(m \oplus S_0)\\
+        &= CBC-MAC_k^{S_0}(m')
+    \end{align*}
+    
+    From this, and since the initialization vector is passed with the result of the $CBC-MAC$ as part of the tag, we get that the new pair is valid, and this modification to $CBC-MAC$ is broken as well.
+\end{paragraph}
+
+\begin{paragraph}
+    d As we've seen in class, and will show in $Q6$, to find two different messages with the same tag, one needs in the order of $2^{\frac{n}{2} + 1} = 2^{65}$ queries on different messages to find 2 messages with the same tag, with probability $\geq \frac{1}{2}$. Specifically, we'll query on random messages of a fixed length, that end with a 1. Suppose we have found two such messages, $M, M'$. We can assume that, since $t = t'$, $CBC-MAC_{k_1}(M) = CBC-MAC_{k_1}(M')$, because otherwise 2 different message get the same encryption under $E_{k_2}$, a contradiction to it being decrypt-able. We'll query the $ECBC-MAC$ once more, on $\Tilde{M} = M || 0^{128}$, to get
+    \begin{align*}
+        ECBC-MAC_{k_1, k_2}(\Tilde{M}) &= E_{k_2}(CBC-MAC_{k_1}(\Tilde{M}))\\
+        &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M) \oplus 0^{128}))\\
+        &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M))) = \Tilde{t}
+    \end{align*}
+    
+    Finally, we'll output a new pair $(M^* = M' || 0^{128}, \Tilde{t})$. Notice we haven't queried the $ECBC-MAC$ on $M^*$, and that
+    \begin{align*}
+        ECBC-MAC_{k_1, k_2}(M^*) &= E_{k_2}(CBC-MAC_{k_1}(M^*))\\
+        &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M') \oplus 0^{128}))\\
+        &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M')))\\
+        &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M))) = \Tilde{t}
+    \end{align*}
+    
+    Hence, the new pair is valid. In conclusion, with complexity $2^{65}$ and probability $\geq \frac{1}{2}$, we have broken the $ECBC-MAC$.
 \end{paragraph}
 
 \section{Extending hash functions from fixed length to variable length messages}
@@ -120,7 +187,40 @@
 
 \section{CBC-MAC}
 \begin{paragraph}
-	a Placeholder
+	a Let $K$ be a key of length $n$ and let $(m_1, m_2, m_3)$ be chosen uniformly over $\{0, 1\}^n$. It follows that the random variable $C_1 = E_K(m_1)$ is also distributed uniformly over the same $\{0, 1\}^n$, assuming $E$ is a truly random function. Therefore $C_2 = C_1 \oplus m_2$ and $C_3 = E_K(C_2)$ are also uniformly distributed. More importantly, since $m_3$ is distributed uniformly, so are $C_4 = m_3 \oplus C_3$ and $\sigma = E_K(C_3)$.
+\end{paragraph}
+
+\begin{paragraph}
+    b From the first part of this question, $C = E_k(E_k(m_1) \oplus m_2)$ has a 1 in $2^{2n}$ probability for having any specific value. From the birthday "paradox" we know that the odds of two such $C$'s (from two different messages) getting the same value are $\frac{1}{2^{2n}}$. The odds then of there being such a collision for $d$ different messages is:
+    \begin{align*}
+        \Pr[\exists M_i \neq M_j. C_{M_i} = C_{M_j}] &= 1 - \Pr[\forall i \neq j. C_{M_i} \neq C_{M_j}]\\
+        &=^{(*)} 1 - \prod\limits_{1 \leq i < j \leq d}\Pr[C_{M_i} \neq C_{M_j}]\\
+        &= 1 - \prod\limits_{i = 1}^d 1 - \frac{i}{2^{2n}} \geq 1 - \prod\limits_{i = 1}^d e^{\frac{i}{2^{2n}}}\\
+        &= 1 - e^{\sum\limits_{i = 1}^d\frac{i}{2^{2n}}} = 1 - e^{\frac{d (d + 1)}{2^{2n + 1}}} \geq \frac{1}{2}\\
+        e^{\frac{d (d + 1)}{2^{2n + 1}}} &\leq \frac{1}{2} \quad |\ln (\cdot)\\
+        \frac{d (d + 1)}{2^{2n + 1}} &\geq -\ln2\\
+        d^2 + d &\geq -\ln2 \cdot 2^{2n+1}
+    \end{align*}
+    
+    In $^{(*)}$ we used the fact that the different messages and their $C$'s are i.i.d.\\
+    
+    For $d \geq \sqrt{-\ln2 \cdot 2} \cdot 2^n$, the inequality holds. Thus that number of different messages will suffice to find a collision with probability $\geq \frac{1}{2}$.
+\end{paragraph}
+
+\begin{paragraph}
+    c Going with the clue, our adversary $\mathcal{A}$ will ask around $c + 9$ queries for messages of the form $M = (m_1, m_2, 0^n)$. From the previous part of the question, with probability $\geq \frac{1}{2}$, we have found a pair of messages, $M = (m_1, m_2, 0^n)$ and $M' = (m'_1, m'_2, 0^n)$ such that
+    \begin{align*}
+        \sigma = E_k(0^n \oplus E_k(m_2 \oplus E_k(m_1))) = E_k(0^n \oplus E_k(m'_2 \oplus E_k(m'_1))) = \sigma'
+    \end{align*}
+    
+    If no collisions were found, $\mathcal{A}$ will just give up, and return $(M^*, \sigma^*)$, for some random message and tag.\\
+    
+    The adversary will next ask for $\Tilde{\sigma}$, the tag of $\Tilde{M} = (m_1, m_2, 1^n)$, and output $\left(M^* = (m'_1, m'_2, 1^n), \Tilde{\sigma}\right)$. From the way it was constructed, $\mathcal{A}$ hadn't queried on $\hat{M}$, and we know that
+    \begin{align*}
+        \hat{\sigma} = E_k(E_k(E_k(m'_1) \oplus m'_2) \oplus 1^n) = E_k(E_k(E_k(m_1) \oplus m_2) \oplus 1^n) = \sigma^*
+    \end{align*}
+    
+    This means $\mathcal{A}$ has outputted a pair $(M^*, \sigma^*)$, which with probability $\geq \frac{1}{2}$ is new and valid. QED.
 \end{paragraph}
 
 \end{document}
