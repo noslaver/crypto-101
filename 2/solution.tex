@@ -215,7 +215,8 @@
 	w.l.g if $M_1$ is longer than $M_2$, we first run $M_1$ through $h$, $s_1 - s_2$
 	times, which doesn't hinder our	algorithm assuming $h$ never hashes to $0^n$, since 
 	we'll still start with different inputs, since $y_1 \neq y_2$, even if $m_1 = m_2$.
-	We then return $(y_i^1, m_i^1)$ and $(y_i^2, m_i^2)$.
+	We then return $(y_i^1, m_i^1)$ and $(y_i^2, m_i^2)$.\\
+	The running time of is $t_{A'} = t_A + s\times t_h$.
 \end{paragraph}
 
 \section{CBC-MAC}
