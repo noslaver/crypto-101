@@ -56,7 +56,27 @@
 \end{paragraph}
 
 \begin{paragraph}
-	d DES is a 16-round Feistel network.
+	d DES is a 16-round Feistel network, where the round functions are determined
+	 by a subset of the 56-bit key. Therefore, that $DES_k^{-1}$ is equal to
+	$DES_k$ with the order of the keys reversed, is to say that if Feistel$_{f_1,..,f_{16}}(L_0, R_0) = (L_{16},R_{16})$ than 
+	Feistel$_{f_{16},..f_1}(R_{16},L_{16}) = (R_0, L_0)$. This is a generalized result of
+	section $(c)$. We'll prove by induction. The base case is covered be section
+	$(c)$. Assume correctness for Feistel$_{f_1,..f_n}$ - 
+	\begin{align*}
+		&Feistel_{f_1,..,f_n}(L_0,R_0) = (L_n,R_n) \\
+		&\Rightarrow Feistel_{f_n,..,f_1}(R_n,L_n) = (R_0, L_0)
+	\end{align*}
+	The induction step - passing the result of a n-round network through another round
+	will result in
+	\begin{align*}
+		Feistel_{f_1,f_{n+1}}(L_0,R_0) = (R_n, L_n\oplus f_{n+1}(R_n))
+	\end{align*}
+	Passing The reversed binary string to the reversed Feistel network we get - 
+	\begin{align*}
+		Feistel_{f_{n+1},..f_1}(L_n\oplus f_{n+1}(R_n),R_n) = (R_n,L_n)
+	\end{align*}
+	This proves that for any n-round Feistel network, and specifically for a 16-round DES
+	decryption is the same as encryption with the round-functions reversed.
 \end{paragraph}
 
 \begin{paragraph}
