@@ -57,7 +57,7 @@
 
 \begin{paragraph}
 	d DES is a 16-round Feistel network, where the round functions are determined
-	 by a subset of the 56-bit key. Therefore, that $DES_k^{-1}$ is equal to
+	by a subset of the 56-bit key. Therefore, that $DES_k^{-1}$ is equal to
 	$DES_k$ with the order of the keys reversed, is to say that if Feistel$_{f_1,..,f_{16}}(L_0, R_0) = (L_{16},R_{16})$ than 
 	Feistel$_{f_{16},..f_1}(R_{16},L_{16}) = (R_0, L_0)$. This is a generalized result of
 	section $(c)$. We'll prove by induction. The base case is covered be section
@@ -80,7 +80,12 @@
 \end{paragraph}
 
 \begin{paragraph}
-	e H
+	e My attack is a meet-in-the-middle attack. With a given plaintext and ciphertext -
+	$(M_1, E(M_1))$, we go through the 28-bit key space, running 8 rounds of
+	DES encryption. This will give $2^{28}$ possible half-encrypted data. Next we go again
+	through the 28-bit key space, this time half-decrypting the given ciphertext 8-rounds
+	of DES. Giving us $2^{28}$ possible half-decrypted data. Finally we search through the 
+	resulting arrays, searching for a key which gave the same result.
 \end{paragraph}
 
 \section{Enhancing DES}
