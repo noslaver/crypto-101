@@ -218,20 +218,22 @@
 \end{paragraph}
 
 \begin{paragraph}
-    b From the first part of this question, $C = E_k(E_k(m_1) \oplus m_2)$ has a 1 in $2^{2n}$ probability for having any specific value. From the birthday "paradox" we know that the odds of two such $C$'s (from two different messages) getting the same value are $\frac{1}{2^{2n}}$. The odds then of there being such a collision for $d$ different messages is:
+    b From the first part of this question, $C = E_k(E_k(m_1) \oplus m_2)$ has a 1 in $2^{2n}$ probability for having any specific value. From the birthday "paradox" we know that the odds of two such $C$'s (from two different messages) getting the same value are $\frac{1}{2^{2n}}$. The odds then of there being such a collision for $d$ different messages is equal to 1 minus the odds of there being 0 collisions, which in itself is equal to:
     \begin{align*}
-        \Pr[\exists M_i \neq M_j. C_{M_i} = C_{M_j}] &= 1 - \Pr[\forall i \neq j. C_{M_i} \neq C_{M_j}]\\
-        &=^{(*)} 1 - \prod\limits_{1 \leq i < j \leq d}\Pr[C_{M_i} \neq C_{M_j}]\\
-        &= 1 - \prod\limits_{i = 1}^d 1 - \frac{i}{2^{2n}} \geq 1 - \prod\limits_{i = 1}^d e^{\frac{i}{2^{2n}}}\\
-        &= 1 - e^{\sum\limits_{i = 1}^d\frac{i}{2^{2n}}} = 1 - e^{\frac{d (d + 1)}{2^{2n + 1}}} \geq \frac{1}{2}\\
-        e^{\frac{d (d + 1)}{2^{2n + 1}}} &\leq \frac{1}{2} \quad |\ln (\cdot)\\
-        \frac{d (d + 1)}{2^{2n + 1}} &\geq -\ln2\\
-        d^2 + d &\geq -\ln2 \cdot 2^{2n+1}
+        \Pr[\forall i \neq j. C_{M_i} \neq C_{M_j}] &=^{(*)} \prod\limits_{1 \leq i < j \leq d}\Pr[C_{M_i} \neq C_{M_j}]\\
+        &= \prod\limits_{i = 1}^d \left(1 - \frac{i}{2^{2n}}\right) \leq \prod\limits_{i = 1}^d e^{\frac{-i}{2^{2n}}}\\
+        &= e^{\sum\limits_{i = 1}^d \frac{-i}{2^{2n}}} = e^{-\frac{d(d + 1)}{2^{2n+1}}}
     \end{align*}
     
-    In $^{(*)}$ we used the fact that the different messages and their $C$'s are i.i.d.\\
+    In $^{(*)}$ we used the fact that the different messages and their $C$'s are i.i.d. We want those odds to be $\leq \frac{1}{2}$, and so we get:
+    \begin{align*}
+        e^{-\frac{d(d + 1)}{2^{2n+1}}} &\leq \frac{1}{2} \quad |\ln(\cdot)\\
+        -\frac{d(d + 1)}{2^{2n+1}} &\leq -\ln2\\
+        \frac{d(d + 1)}{2^{2n+1}} &\geq \ln2\\
+        d^2 + d &\geq \ln2 \cdot 2^{2n+1}
+    \end{align*}
     
-    For $d \geq \sqrt{-\ln2 \cdot 2} \cdot 2^n$, the inequality holds. Thus that number of different messages will suffice to find a collision with probability $\geq \frac{1}{2}$.
+    For $d \geq \sqrt{2\ln2} \cdot 2^n$, the inequality holds. Thus that number of different messages will suffice to find a collision with probability $\geq \frac{1}{2}$.
 \end{paragraph}
 
 \begin{paragraph}
