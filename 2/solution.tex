@@ -206,12 +206,13 @@
 
 \section{Extending hash functions from fixed length to variable length messages}
 \begin{paragraph}
-	a Note that $H(M) = h(y_s, m_s)$. Meaning that finding $M_1,M_2$ such that $H(M_1) = H(M_2)$
-	is equivalent to finding $h(y^1_s, m^1_s) = h(y^2_s, m^2_s)$.
-	An adversary $\mathcal{A}'$ can use the same algorithm $\mathcal{A}$ uses for $s = 1$, and output
-	$y_1m_1, y_2m_2$.
-	Since $\mathcal{A}'$ does one iteration where $\mathcal{A}$ does $s$ iterations, its
-	complexity is $\frac{t_A}{s}$.
+	a We construct an adversary using $\mathcal{A}$. An adversary $\mathcal{A'}$ can
+	ask $\mathcal{A}$ for a pair of messages $M_1 \neq M_2$ such that $H(M_1) = H(M_2)$.
+	Given this pair, $\mathcal{A}$ can run through the steps of $H$,
+	searching for a step $i$ where for a different input $h$ gives the same output. We then
+	return $(y_i^1, m_i^1)$ and $(y_i^2, m_i^2)$. w.l.g if $M_1$ is longer than
+	$M_2$, we first run $M_1$ through $h$, $s_1 - s_2$ times.
+	
 \end{paragraph}
 
 \section{CBC-MAC}
