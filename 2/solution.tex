@@ -209,9 +209,12 @@
 	a We construct an adversary using $\mathcal{A}$. An adversary $\mathcal{A'}$ can
 	ask $\mathcal{A}$ for a pair of messages $M_1 \neq M_2$ such that $H(M_1) = H(M_2)$.
 	Given this pair, $\mathcal{A}$ can run through the steps of $H$,
-	searching for a step $i$ where for a different input $h$ gives the same output. We then
-	return $(y_i^1, m_i^1)$ and $(y_i^2, m_i^2)$. w.l.g if $M_1$ is longer than
-	$M_2$, we first run $M_1$ through $h$, $s_1 - s_2$ times.
+	searching for the step $i$ where for a different input $h$ gives the same output.
+	Such a step much occur, since the for the $H$ function the inputs are different
+	but the outputs are the same.
+	w.l.g if $M_1$ is longer than $M_2$, we first run $M_1$ through $h$, $s_1 - s_2$
+	times, which doesn't hinder our	algorithm assuming $h$ never hashes to $0^n$.
+	We then return $(y_i^1, m_i^1)$ and $(y_i^2, m_i^2)$.
 	
 \end{paragraph}
 
