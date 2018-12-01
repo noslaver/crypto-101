@@ -87,7 +87,7 @@
 	of DES. Giving us $2^{28}$ possible half-decrypted data. Finally we search through the 
 	resulting arrays, for a key which gave the same result. Each DES round includes
 	a XOR operation and a key-insertion, so the 8-round encryption\textbackslash decryption
-	costs $2\times 8 \times 2 \times 2^{28} = 32\times 2^{28}$. Sorting the arrays - $n\log{n} = 2\times 2^{28}\times \log{2^28}=56\times 2^{28}$.
+	costs $2\times 8 \times 2 \times 2^{28} = 32\times 2^{28}$. Sorting the arrays - $n\log{n} = 2\times 2^{28}\times \log{2^{28}}=56\times 2^{28}$.
 	Searching for a collision in the arrays - $2\times 2^{28}$. We get a total complexity
 	of $t = 90\times 2^{28}$.
 \end{paragraph}
