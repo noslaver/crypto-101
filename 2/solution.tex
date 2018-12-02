@@ -1,10 +1,6 @@
 \documentclass{article}
 \usepackage{mathtools}
 \usepackage{harpoon}
-\usepackage{pagecolor}
-
-\pagecolor{black}
-\color{white}
 
 \begin{document}
 \title{Introduction to Modern Cryptography - EX. 2}
@@ -17,16 +13,11 @@
 
 \section{Feistel Networks \& DES}
 \begin{paragraph}
-	a For a round-function $f = 0$ of a Feistel network, we get that for the i-th round, with
-	input $(L_i, R_i)$ the output of $(R_i, L_i\oplus f(R_i, K_i)) = (R_i, L_i\oplus 0) = 
-	(R_i, L_i)$. So for a r-round network, the output will be $(L_0, R_0)$ for an even r, and
-	$(R_0, L_0)$ for an odd r.
+	a For a round-function $f = 0$ of a Feistel network, we get that for the $i$-th round, with input $(L_i, R_i)$ the output of $(R_i, L_i\oplus f(R_i, K_i)) = (R_i, L_i\oplus 0) = (R_i, L_i)$. So for an $r$-round network, the output will be $(L_0, R_0)$ for an even $r$, and $(R_0, L_0)$ for an odd one.
 \end{paragraph}
 
 \begin{paragraph}
-	b For a round-function $f(x) = x$ we'll get the following outputs for first three rounds - 
-	$y_1 = (R_0, L_0\oplus R_0)$, $y_2 = (L_0\oplus R_0, L_0)$, $y_3 = (L_0, R_0)$. What we find
-	is a 3 round cycle. So for a r-round network we get -
+	b For a round-function $f(x) = x$ we'll get the following outputs for the first three rounds - $y_1 = (R_0, L_0\oplus R_0)$, $y_2 = (L_0\oplus R_0, L_0)$, $y_3 = (L_0, R_0)$. What we find is a 3 round cycle. So for an $r$-round network we get -
 	\begin{equation*}
 	y_r = 
 		\begin{cases}
@@ -49,6 +40,7 @@
 		y'_1 &= (L_0\oplus f_1(R_0), R_0\oplus f_2(L_0\oplus f_1(R_0))\oplus f_2(L_0\oplus f_1(R_0))) \\
 	  &= (L_0\oplus f_1(R_0), R_0)
 	\end{align*}
+	
 	After the second round we get - 
 	\begin{align*}
 		y'_2 &= (R_0, L_0\oplus f_1(R_0) \oplus f_1(R_0)) = (R_0, L_0)
@@ -56,54 +48,54 @@
 \end{paragraph}
 
 \begin{paragraph}
-	d DES is a 16-round Feistel network, where the round functions are determined
-	by a subset of the 56-bit key. Therefore, that $DES_k^{-1}$ is equal to
-	$DES_k$ with the order of the keys reversed, is to say that if Feistel$_{f_1,..,f_{16}}(L_0, R_0) = (L_{16},R_{16})$ than 
-	Feistel$_{f_{16},..f_1}(R_{16},L_{16}) = (R_0, L_0)$. This is a generalized result of
-	section $(c)$. We'll prove by induction. The base case is covered be section
-	$(c)$. Assume correctness for Feistel$_{f_1,..f_n}$ - 
+	d DES is a 16-round Feistel network, where the round functions are determined by a subset of the 56-bit key. Therefore, that $DES_k^{-1}$ is equal to $DES_k$ with the order of the keys reversed, is to say that if Feistel$_{f_1,..,f_{16}}(L_0, R_0) = (L_{16},R_{16})$, then Feistel$_{f_{16},..,f_1}(R_{16},L_{16}) = (R_0, L_0)$. This is a generalized result of section $(c)$. We'll prove by induction. The base case is covered by the previous section. Assume correctness for Feistel$_{f_1,..,f_n}$ - 
 	\begin{align*}
-		&Feistel_{f_1,..,f_n}(L_0,R_0) = (L_n,R_n) \\
-		&\Rightarrow Feistel_{f_n,..,f_1}(R_n,L_n) = (R_0, L_0)
+		Feistel_{f_1,..,f_n}(L_0,R_0) = (L_n,R_n) \Rightarrow Feistel_{f_n,..,f_1}(R_n,L_n) = (R_0, L_0)
 	\end{align*}
-	The induction step - passing the result of a n-round network through another round
-	will result in
+	
+	The induction step - passing the result of an $n$-round network through another round will result in
 	\begin{align*}
-		Feistel_{f_1,f_{n+1}}(L_0,R_0) = (R_n, L_n\oplus f_{n+1}(R_n))
+		Feistel_{f_1,..,f_{n+1}}(L_0,R_0) = (R_n, L_n\oplus f_{n+1}(R_n))
 	\end{align*}
-	Passing The reversed binary string to the reversed Feistel network we get - 
+	
+	Passing the reversed binary string to the reversed Feistel network we get - 
 	\begin{align*}
-		Feistel_{f_{n+1},..f_1}(L_n\oplus f_{n+1}(R_n),R_n) = (R_n,L_n)
+		Feistel_{f_{n+1},..,f_1}(L_n\oplus f_{n+1}(R_n),R_n) = (R_n,L_n)
 	\end{align*}
-	This proves that for any n-round Feistel network, and specifically for a 16-round DES
-	decryption is the same as encryption with the round-functions reversed.
+	
+	This proves that for any $n$-round Feistel network, and specifically for a 16-round DES, decryption is the same as encryption with the round-functions reversed.
 \end{paragraph}
 
 \begin{paragraph}
-	e My attack is a meet-in-the-middle attack. With a given plaintext and ciphertext -
-	$(M_1, E(M_1))$, we go through the 28-bit key space, running 8 rounds of
-	DES encryption. This will give $2^{28}$ possible half-encrypted data. Next we go again
-	through the 28-bit key space, this time half-decrypting the given ciphertext 8-rounds
-	of DES. Giving us $2^{28}$ possible half-decrypted data. Finally we search through the 
-	resulting arrays, for a key which gave the same result. Each DES round includes
-	a XOR operation and a key-insertion, so the 8-round encryption\textbackslash decryption
-	costs $2\times 8 \times 2 \times 2^{28} = 32\times 2^{28}$. Sorting the arrays - $n\log{n} = 2\times 2^{28}\times \log{2^{28}}=56\times 2^{28}$.
-	Searching for a collision in the arrays - $2\times 2^{28}$. We get a total complexity
-	of $t = 90\times 2^{28}$.
+	e In this section we assume the encryption\textbackslash decryption algorithm is a truly random function, for ease of analysis.\\
+	
+	Our attack is a meet-in-the-middle attack. Given a plaintext and matching ciphertext - $(M_1, E(M_1))$, we go through the 28-bit key space, for each possible key running 8 rounds of DES encryption. This will give us $2^{28}$ possible half-encrypted messages, which we'll save in a table that matches a key to the resulting half-encrypted message. 
+	
+	Next we go again through the 28-bit key space, this time half-decrypting the given ciphertext through 8-rounds of DES. Giving us $2^{28}$ possible half-decrypted messages. We save these message, and their corresponding keys, to a new table.
+	
+	Finally, we'll sort both tables by the resulting half-encrypted\textbackslash encrypted message, go over the first table, and for each half-encrypted plaintext we'll look for an identical half-decrypted ciphertext, and combine their keys to get a possible 56-bit $k$ used to encrypt the message.\\
+	
+	Thus far, for every possible key in the 28-bit key space, we have performed 16 rounds of encryption\textbackslash decryption, for a total of $32 \cdot 2^{28}$ operations. Sorting both tables takes us $2 \cdot \log2^{28} \cdot 2^{28} = 56 \cdot 2^{28}$. Looking for a collision in the created tables requires $2 \cdot 2^{28}$ operations, since the tables are sorted. The total complexity of the algorithm is then $(32 + 56 + 2) \cdot 2^{28} = 90 \cdot 2^{28} < 100 \cdot s^{28}$.
+	
+	For any decryption key chosen at random, there is a $\frac{2^{28}}{2^{64}} = \frac{1}{2^{36}}$ chance that the resulting half-decrypted message will match a half-encrypted one. This gives us an expected total of about $\frac{2^{28}}{2^{36}} = \frac{1}{2^8}$ such 'false positives', and thus the probability of such a false positive to occur is about the same, and the odds of us being left with a single key are about $1 - \frac{1}{2^8}$.\\
+	
+	If only one key is found to be suitable, it must be the correct key, since we know from previous sections that encrypting and decrypting are the inverse of each other. As noted, the odds of this happening are $1 - \frac{1}{2^8} > \frac{1}{2} + \frac{1}{4}$. This implies that the modified cipher is not a $\left(t = 100 \cdot 2^{28}, \epsilon = \frac{1}{4}\right)$-secure PRF. QED.
 \end{paragraph}
+\newpage
 
 \section{Enhancing DES}
 \begin{paragraph}
 	{$DES^V:$} Assume we have a moderate $\geq$ 2 number of messages, $M_i$, and their encryptions, $C_i = DES^V_{k, k_1}(M_i) = DES_k(M_i) \oplus k_1$. Do the following for each possible value of $k$, denoted $k'$:
 	
-	Encrypt $M_1$ using $DES_{k'}$, and get $k'_1 = DES_k(M_1) \oplus k_1 \oplus DES_{k'}(M_1)$. Next calculate $C'_2 = DES_k(M_1) \oplus k_1 \oplus k'_1$, and decrypt it using $DES_{k'}$. If we got $M_2$ at the end, it means the odds of 
-	$k = k', k_1 = k'_1$. We can run $DES^V_{k', k'_1}$ on a few more messages, if we want to be certain that we found the right pair of keys. Since we are going solely over the possibilities for the first key $k$, it will take in the order of $2^{56}$ $DES$ encryptions and decryptions to find the correct pair of keys.
+	Encrypt $M_1$ using $DES_{k'}$, and get $k'_1 = DES_k(M_1) \oplus k_1 \oplus DES_{k'}(M_1)$. Next calculate $C'_2 = DES_k(M_1) \oplus k_1 \oplus k'_1$, and decrypt it using $DES_{k'}$. If we got $M_2$ at the end, it means that with high probability$^*$ $k = k', k_1 = k'_1$. We can run $DES^V_{k', k'_1}$ on a few more messages, if we want to be certain that we found the right pair of keys. Since we are going solely over the possibilities for the first key $k$, it will take in the order of $2^{56}$ $DES$ encryptions and decryptions to find the correct pair of keys.
+	
+	$^*$ The odds of us finding a pair of keys that are not $k$ and $k_1$, as seen in the previous question, are very low. Hence, with high probability, we have found the correct pair.
 \end{paragraph}
 
 \begin{paragraph}
     {$DES^{W}:$} Again assume a moderate $\geq$ 2 number of messages $M_i$ and their encryptions $C_{i} = DES^{W}_{k, k_1}(M_i) = DES_{k}(M_i \oplus k_1)$. For each possible value of $k$, denoted again as $k'$, do the following:
     
-    Decrypt $C_1$ using $DES_{k'}$, and calculate $k'_1 = DES^{-1}_{k'}(DES_k(M_1 \oplus k_1)) \oplus M_1$. Then encrypt $M_2$ using $DES^W_{k', k'_1}$, getting $C'_2 = DES_{k'}(M_2 \oplus k'_1)$. If we get $C'_2 = C_2$, it means again that $k' = k, k'_1 = k_1$. Once more we can run $DES^W_{k', k'_1}$ to assure ourselves that we got the right combination of keys. As was the case with $DES^V$, we need in the order of $2^{56}$ $DES$ encryptions/decryptions to break the cipher.
+    Decrypt $C_1$ using $DES_{k'}$, and calculate $k'_1 = DES^{-1}_{k'}(DES_k(M_1 \oplus k_1)) \oplus M_1$. Then encrypt $M_2$ using $DES^W_{k', k'_1}$, getting $C'_2 = DES_{k'}(M_2 \oplus k'_1)$. If we get $C'_2 = C_2$, it means again that with high probability $k' = k, k'_1 = k_1$. Once more we can run $DES^W_{k', k'_1}$ to assure ourselves that we got the right combination of keys. As was the case with $DES^V$, we need in the order of $2^{56}$ $DES$ encryptions\textbackslash decryptions to break the cipher.
 \end{paragraph}
 
 \section{Tweaking AES}
@@ -179,14 +171,14 @@
         CBC-MAC_k^{S'_0}(m') &= CBC-MAC_k^{S'_0}(m \oplus S_0 \oplus S'_0)\\
         &= E_k(m \oplus S_0 \oplus S'_0 \oplus S'_0)\\
         &= E_k(m \oplus S_0)\\
-        &= CBC-MAC_k^{S_0}(m')
+        &= CBC-MAC_k^{S_0}(m)
     \end{align*}
     
     From this, and since the initialization vector is passed with the result of the $CBC-MAC$ as part of the tag, we get that the new pair is valid, and this modification to $CBC-MAC$ is broken as well.
 \end{paragraph}
 
 \begin{paragraph}
-    d As we've seen in class, and will show in $Q6$, to find two different messages with the same tag, one needs in the order of $2^{\frac{n}{2} + 1} = 2^{65}$ queries on different messages to find 2 messages with the same tag, with probability $\geq \frac{1}{2}$. Specifically, we'll query on random messages of a fixed length, that end with a 1. Suppose we have found two such messages, $M, M'$. We can assume that, since $t = t'$, $CBC-MAC_{k_1}(M) = CBC-MAC_{k_1}(M')$, because otherwise 2 different message get the same encryption under $E_{k_2}$, a contradiction to it being decrypt-able. We'll query the $ECBC-MAC$ once more, on $\Tilde{M} = M || 0^{128}$, to get
+    d As we've seen in class, and will show in $Q6$, to find two different messages with the same tag, one needs in the order of $2^{\frac{n}{2} + 1} = 2^{65}$ queries on different messages to find 2 messages with the same tag, with probability $\geq \frac{1}{2}$. Specifically, we'll query on random messages of a fixed length. Suppose we have found two such messages, $M, M'$. We can assume that, since $t = t'$, $CBC-MAC_{k_1}(M) = CBC-MAC_{k_1}(M')$, because otherwise 2 different message get the same encryption under $E_{k_2}$, a contradiction to it being decrypt-able. We'll query the $ECBC-MAC$ once more, on $\Tilde{M} = M || 0^{128}$, to get
     \begin{align*}
         ECBC-MAC_{k_1, k_2}(\Tilde{M}) &= E_{k_2}(CBC-MAC_{k_1}(\Tilde{M}))\\
         &= E_{k_2}(E_{k_1}(CBC-MAC_{k_1}(M) \oplus 0^{128}))\\
@@ -203,6 +195,7 @@
     
     Hence, the new pair is valid. In conclusion, with complexity $2^{65}$ and probability $\geq \frac{1}{2}$, we have broken the $ECBC-MAC$.
 \end{paragraph}
+\newpage
 
 \section{Extending hash functions from fixed length to variable length messages}
 \begin{paragraph}
@@ -232,7 +225,9 @@
         &= e^{\sum\limits_{i = 1}^d \frac{-i}{2^{2n}}} = e^{-\frac{d(d + 1)}{2^{2n+1}}}
     \end{align*}
     
-    In $^{(*)}$ we used the fact that the different messages and their $C$'s are i.i.d. We want those odds to be $\leq \frac{1}{2}$, and so we get:
+    In $^{(*)}$ we used the fact that the different messages and their $C$'s are i.i.d.
+    
+    We want those odds to be $\leq \frac{1}{2}$, and so we get:
     \begin{align*}
         e^{-\frac{d(d + 1)}{2^{2n+1}}} &\leq \frac{1}{2} \quad |\ln(\cdot)\\
         -\frac{d(d + 1)}{2^{2n+1}} &\leq -\ln2\\
@@ -249,14 +244,13 @@
         \sigma = E_k(0^n \oplus E_k(m_2 \oplus E_k(m_1))) = E_k(0^n \oplus E_k(m'_2 \oplus E_k(m'_1))) = \sigma'
     \end{align*}
     
-    If no collisions were found, $\mathcal{A}$ will just give up, and return $(M^*, \sigma^*)$, for some random message and tag.\\
+    If no collisions were found, $\mathcal{A}$ will just give up, and return $(M^*, \sigma^*)$, for some random message and tag.
     
-    The adversary will next ask for $\Tilde{\sigma}$, the tag of $\Tilde{M} = (m_1, m_2, 1^n)$, and output $\left(M^* = (m'_1, m'_2, 1^n), \Tilde{\sigma}\right)$. From the way it was constructed, $\mathcal{A}$ hadn't queried on $\hat{M}$, and we know that
+    The adversary will next ask for $\Tilde{\sigma}$, the tag of $\Tilde{M} = (m_1, m_2, 1^n)$, and output $\left(M^* = (m'_1, m'_2, 1^n), \Tilde{\sigma}\right)$. From the way it was constructed, $\mathcal{A}$ hadn't queried on $M^*$, and we know that
     \begin{align*}
-        \hat{\sigma} = E_k(E_k(E_k(m'_1) \oplus m'_2) \oplus 1^n) = E_k(E_k(E_k(m_1) \oplus m_2) \oplus 1^n) = \sigma^*
+        \sigma^* = E_k(E_k(E_k(m'_1) \oplus m'_2) \oplus 1^n) = E_k(E_k(E_k(m_1) \oplus m_2) \oplus 1^n) = \Tilde{\sigma}
     \end{align*}
     
     This means $\mathcal{A}$ has outputted a pair $(M^*, \sigma^*)$, which with probability $\geq \frac{1}{2}$ is new and valid. QED.
 \end{paragraph}
-
 \end{document}
