@@ -1,6 +1,9 @@
 \documentclass{article}
 \usepackage{mathtools}
 \usepackage{harpoon}
+\usepackage{amsfonts}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 \begin{document}
 \title{Introduction to Modern Cryptography - EX. 3}
@@ -11,9 +14,49 @@
 \newpage
 \pagenumbering{roman}
 
-\section{Feistel Networks \& DES}
+\section{}
 \begin{paragraph}
-	a 
+	a Let $m=p\cdot q$ where $p,q$ are primes, and let $e$ be a 
+	positive integer that is co-prime to $\varphi(m)$.
+	Since $e$ is co-prime to $\varphi(m)$ - $gcd(e, \varphi(m)) = k \neq 1$.
+	$\Rightarrow e = a\cdot k, \varphi(m) = b\cdot k$. It follows that Factoring
+	some generator $g$ of $\mathbb{Z}^*_m$ - 
+	\begin{align*}
+		x = g^b&, y = g^{2b}\\
+		x^e = g^{be} = g^{akb} &= (g^{bk})^a = 1^a = 1 \\
+		y^e = g^{2be} = g^{2akb} &= (g^{bk})^{2a} = 1^a = 1
+	\end{align*}
+	Hence $x^e \mod m$ from $\mathbb{Z}^*_m$ to $\mathbb{Z}^*_m$ is not one-to-one.
+\end{paragraph}
+
+\begin{paragraph}
+	b By Lagrange's theorem the order of an element $g$ of a group $G$
+	must divide the size of the group - $order(g)| |G|$. For $\mathbb{Z}^*_p$,
+	where p is prime we get that $order(g) | \varphi(p)(=p-1)$.
+	Given that $p-1 =\prod_i{q_i^{e^i}}$, where $q_i$ are primes. When can
+	check if a given $g$ is a generator of $\mathbb{Z}^*_p$ as follows - 
+
+	\begin{algorithm}
+	\begin{algorithmic}[1]
+		\State $\text{is\_generator}( \textit{g} ):$
+		\For{\texttt{$q_i$ in $divisors$}}
+			\If {$q_i^{\frac{p-1}{q_i}}=_p 1$} \Return false
+			\EndIf
+		  \EndFor
+		\State \Return true
+	\end{algorithmic}
+	\end{algorithm}
+
+	$p-1$ can have at most $log(p)$ divisors, each iteration of the for-loop
+	takes $\mathcal{O}(log(p))$ for division and exponentiation. Overall we achieve
+	a running time of $\mathcal{O}(log^2(p))$.
+
+	Proof of correctness: $g$ is a generator of $\mathbb{Z}^*_p$ if $order(g) = p -1$.
+	Then for each $e_i < p - 1$, $g^{e_i} = g^{\frac{p-1}{q_i}} \neq_p 1$. And the 
+	algorithm will return true correctly.
+
+	If $g$ is not a generator of $\mathbb{Z}^*_p$.
+
 \end{paragraph}
 
 \section{Euler's function}
