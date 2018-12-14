@@ -5,6 +5,10 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
+\makeatletter
+\newcommand{\tpmod}[1]{{\@displayfalse\pmod{#1}}}
+\makeatother
+
 \begin{document}
 \title{Introduction to Modern Cryptography - EX. 3}
 \author{Roi Koren 305428369\\ Noam Koren 204175004}
@@ -76,7 +80,24 @@
 
 \section{Recovering RSA's private-key is as hard as Factoring}
 \begin{paragraph}
-	a 
+	a Given $m,e,d$, we'll find $k$ such that $k = \varphi(m)\cdot l$, where
+	$l$ is an odd integer. Notice that - 
+	\begin{align*}
+		e\cdot d = 1&\tpmod {\varphi(m)} \Rightarrow \\
+		e\cdot d = 1 &+ C\varphi(m) \\
+		e\cdot d - 1 &= C(p-1)(q-1) = C\cdot 2a \cdot 2b = C\cdot 4ab
+	\end{align*}
+	Where we used that $p - 1 = 2a$, $q - 1 = 2b$, where $a, b$ are odd integers.
+	Since $\varphi(m)$ is even, $C\cdot \varphi(m)$ is also even. To calculate $k$,
+	we first divide $ed - 1$ by 4. If the result is odd, than it follows that $C$
+	must be odd - $(ed - 1) / 4 = Cab$, and in that case we'll return $k = ed - 1 = C\varphi(m)$.
+	Otherwise, we'll keep dividing $ed-1$ by two, until reaching an odd number, getting
+	$\frac{C\cdot 4ab}{2^n}$, and again we get $l = C/2^n$ must be odd, so
+	we can return $k = \frac{ed - 1}{2^n}$.
+\end{paragraph}
+
+\begin{paragraph}
+	b 
 \end{paragraph}
 
 \section{RSA with shared modulus}
