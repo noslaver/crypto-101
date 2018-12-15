@@ -85,6 +85,20 @@
 
 	The adversary will then return $b = 0$ if $x_1 = x_2$, and otherwise $b = 1$,
 	with $\Pr[b' = b] = 1$.
+\end{paragraph}
+
+\begin{paragraph}
+	b The key exchange works as follows: \\
+	Alice sends a message $A = g^a$. Bob sends a message $B = g^b$. Charlie
+	sends a message $C = g^c$.\\
+	Based on $a, B, C$ Alice computes $K = (ALG(B, C))^a = (ALG(g^b, g^c))^a
+	 = (h^{bc})^a = h^{abc}$. Similarly, Bob computes $K = (ALG(A,C))^b
+	  = h^{abc}$ and Charlie computes $K = (ALG(A,B))^c = h^{abc}$. \\
+	An adversary sniffing the communicating parties can learn $(g^a, g^b, g^c)$.
+	Under BDDH, that triplet together with the private key $(g^a, g^b, g^c, h^{abc})$
+	indistinguishable from $(g^a, g^b, g^c, h^d)$, meaning an adversary
+	can't distinguish between $K$ and a random element $h^d$ in the
+	key space $H$.
 
 \end{paragraph}
 
