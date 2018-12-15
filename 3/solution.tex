@@ -37,7 +37,7 @@
 	b By Lagrange's theorem the order of an element $g$ of a group $G$
 	must divide the size of the group - $order(g)| |G|$. For $\mathbb{Z}^*_p$,
 	where p is prime we get that $order(g) | \varphi(p)(=p-1)$.
-	Given that $p-1 =\prod_i{q_i^{e^i}}$, where $q_i$ are primes. When can
+	Given that $p-1 =\prod_i{q_i^{e^i}}$, where $q_i$ are primes. One can
 	check if a given $g$ is a generator of $\mathbb{Z}^*_p$ as follows - 
 
 	\begin{algorithm}
@@ -52,14 +52,15 @@
 	\end{algorithm}
 
 	$p-1$ can have at most $log(p)$ divisors, each iteration of the for-loop
-	takes $\mathcal{O}(log(p))$ for division and exponentiation. Overall we achieve
-	a running time of $\mathcal{O}(log^2(p))$.
+	takes $\mathcal{O}(log(p))$ for division and exponentiation. Overall the algorithm's
+	running time of $\mathcal{O}(log^2(p))$. \\
 
 	Proof of correctness: $g$ is a generator of $\mathbb{Z}^*_p$ if $order(g) = p -1$.
-	Then for each $e_i < p - 1$, $g^{e_i} = g^{\frac{p-1}{q_i}} \neq_p 1$. And the 
+	Then for each $e_i < p - 1$, $g^{e_i} = g^{\frac{p-1}{q_i}} \neq 1 \tpmod p$. And the 
 	algorithm will return true correctly.
 
-	If $g$ is not a generator of $\mathbb{Z}^*_p$.
+	If $g$ is not a generator of $\mathbb{Z}^*_p$, we know that $\varphi(g) = n$
+	where $n|p - 1$.
 
 \end{paragraph}
 
@@ -70,7 +71,21 @@
 
 \section{El-Gamal under BDDH}
 \begin{paragraph}
-	a 
+	a El-Gamal doesn't achieve ciphertext indistinguishability. An adversary
+	may choose two messages $(m_1, m_2) = (1, m')$.
+	The adversary can then calculate for the received ciphertext $E = (B,C)$ - \\
+	\begin{align*}
+		&x_1 = ALG(A, B) = ALG(g^a, g^b) = h^{ab} \\
+		&x_2 = ALG(g, C) = ALG(g, g^{ab}\cdot m) = 
+		\begin{cases}
+			h^{ab}, \mbox{ for } m' = 1 \\
+			ALG(g, g^{ab}\cdot m), \mbox{ for } m' = m
+		\end{cases}
+	\end{align*}
+
+	The adversary will then return $b = 0$ if $x_1 = x_2$, and otherwise $b = 1$,
+	with $\Pr[b' = b] = 1$.
+
 \end{paragraph}
 
 \section{Random self reducibility of DLOG}
