@@ -58,7 +58,7 @@
     
     This means that, for a number \(a\) to satisfy \(gcd(a, p^e) \neq 1\), \(a\) must be of the form \(a = p^i \cdot b\) for some integers \(i > 0, b \geq 0\).
     
-    For \(i = 1\), there are exactly \(p^{e - 1}\) numbers of the form \(a = p \cdot b\) that are still smaller than or equal to \(p^e\). These include all such \(a\)'s for \(1 < i \leq e\).\\
+For \(i = 1\), there are exactly \(p^{e - 1}\) such numbers that are still smaller than or equal to \(p^e\). Among these numbers are all numbers of the form \(d = p^j \cdot x = p \cdot (p^{j - 1} \cdot x)\) for \(j = 2, ..., e\). Thus we don't need to count them separately.\\
     
     From this we get that there are \(p^e - p^{e - 1} = (p - 1) p^{e - 1}\) different \(a\)'s between 1 and \(p^e\) that satisfy \(gcd(a, p^e) = 1\), and so \(\varphi(p^e) = (p - 1) p^{e - 1}\).
 \end{paragraph}
@@ -123,7 +123,7 @@
 	\end{algorithmic}
 \end{algorithm}
 
-Since \(\mathcal{A}\) returns a correct answer for \(\frac{1}{1000}\) of the possible \(a_i\)'s, the odds of \(\mathcal{B}\) returning \(\bot\) are equal to the odds that \(\mathcal{A}\) returned a wrong value for each of the 700 calls we made to it. This, in turn is equal to \(\binom{700}{0} \cdot (\frac{1}{1000})^{0} (1 - (\frac{1}{1000})^{700}) \approx 0.496\). Conversely, the odds of a correct \(c_i\) being calculated and returned is \(\approx 0.5\).
+Since \(\mathcal{A}\) returns a correct answer for \(\frac{1}{1000}\) of the possible \(a_i\)'s, the odds of \(\mathcal{B}\) returning \(\bot\) are equal to the odds that \(\mathcal{A}\) returned a wrong value for each of the 700 calls we made to it. Since each call to \(mathcal{A}\) is independent from the others, and has the same probability of returning a correct answer, those odds mentioned are the odds of a binomially distributed random variable to equal 0, with \(p = \frac{1}{1000}\). This, in turn is equal to \(\binom{700}{0} \cdot (\frac{1}{1000})^{0} (1 - (\frac{1}{1000})^{700}) \approx 0.496\). Conversely, the odds of a correct \(c_i\) being calculated and returned is \(\approx 0.5\).
 
 The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions and exponentiations. Since integer divisions and exponentiations can be performed in \(\mathcal{O}(\log{p})\) time, we get that \(\mathcal{B}\)'s running time is \(\mathcal{O}(\mathcal{A} + \log{p})\)
 
@@ -189,7 +189,7 @@ The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions a
 
 \section{RSA with shared modulus}
 \begin{paragraph}
-	a Let \(e_i, e_j\) be two co-prime public keys, \(m\) the shared modulus and \(x\) a message. Eve can, knowing \(c_i \equiv x^{e_i}\) and \(c_j \equiv x^{e_j}\), find two integers \(a, b\) s.t. \(a \cdot e_i + b \cdot e_j = 1\). These integers exist because \(gcd(e_i, e_j) = 1\). Now, to find the original message \(x\), Eve can calculate the following:
+	a Let \(e_i, e_j\) be two co-prime public keys, \(m\) the shared modulus and \(x\) a message. As we've seen in class, Eve can find two integers \(a, b\) s.t. \(a \cdot e_i + b \cdot e_j = 1\). These integers exist because \(gcd(e_i, e_j) = 1\). Now, to find the original message \(x\), knowing \(c_i \equiv x^{e_i}\) and \(c_j \equiv x^{e_j}\), Eve can calculate the following:
 	\begin{align*}
 	    c_i^a \cdot c_j^b &= (x^{e_i})^a \cdot (x^{e_j})^b\\
 	    &= x^{a \cdot e_i} \cdot x^{b \cdot e_j}\\
