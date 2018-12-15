@@ -41,10 +41,10 @@
 	check if a given $g$ is a generator of $\mathbb{Z}^*_p$ as follows - 
 
 	\begin{algorithm}
-	\begin{algorithmic}[1]
+	\begin{algorithmic}[]
 		\State $\text{is\_generator}( \textit{g} ):$
 		\For{\texttt{$q_i$ in $divisors$}}
-			\If {$q_i^{\frac{p-1}{q_i}}=_p 1$} \Return false
+			\If {$q_i^{\frac{p-1}{q_i}}= 1 \tpmod p$} \Return false
 			\EndIf
 		  \EndFor
 		\State \Return true
@@ -114,7 +114,35 @@
 \end{paragraph}
 
 \begin{paragraph}
-	b 
+	d The factoring algorithm:
+	\begin{algorithm}
+		\begin{algorithmic}[1]
+			\State $k \gets Cab$ where $C$ is odd
+			\For{\texttt{$i$ in $1..t$}}
+				\State Choose a random $g \gets \mathbb{Z}^*_m$
+				\If {$gcd(g,m) \neq 1$} \Return $(p, q) = (g, \frac{m}{g})$
+				\EndIf
+				\If {$g^k = \pm 1\tpmod m$} continue
+				\EndIf
+				\State $p \gets gcd(g^k + 1, m)$ \Return $(p, \frac{m}{p})$
+			\EndFor
+		\end{algorithmic}
+	\end{algorithm}
+
+	In step 1, we pick a $k$ based on section $a$. In step 3, with a 
+	probability of ${\frac{1}{2}}$ we get a $g$ that satisfies section $b$, 
+	i.e. one that is of an even order in $\mathbb{Z}^*_p$ and of an odd
+	order in $\mathbb{Z}^*_q$, or vice-versa. If $g$ isn't co-prime to $m$,
+	then it is either $p$ or $q$, and we return	so in step 4.
+	In step 5 we check whether $g$ is a trivial square root, if it isn't, we
+	continue to step 6. From section $b$ we know that $g$ must be a non-trivial
+	square root, meaning either $g^k = 1 \tpmod p$ or $g^k = 1 \tpmod q$ and
+	in that case we calculate $gcd(g^k + 1, m)$ which will be either $p$ or $q$,
+	accordingly. \\
+
+	The probability of finding a correct $g$ in each iteration is $\frac{1}{2}$,
+	after $t$ iterations the probability is $1 - 2^{-t}$ with a time complexity
+	of $\mathcal{O}(t\cdot poly(n))$.
 \end{paragraph}
 
 \section{RSA with shared modulus}
