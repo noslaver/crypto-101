@@ -20,136 +20,148 @@
 
 \section{}
 \begin{paragraph}
-	a Let $m=p\cdot q$ where $p,q$ are primes, and let $e$ be a 
-	positive integer that is co-prime to $\varphi(m)$.
-	Since $e$ is co-prime to $\varphi(m)$ - $gcd(e, \varphi(m)) = k \neq 1$.
-	$\Rightarrow e = a\cdot k, \varphi(m) = b\cdot k$. It follows that Factoring
-	some generator $g$ of $\mathbb{Z}^*_m$ - 
+	a Let $m=p\cdot q$ where $p,q$ are primes, and let $e$ be a positive integer that is not co-prime to $\varphi(m)$. Since $e$ is not co-prime to $\varphi(m)$ - $gcd(e, \varphi(m)) = k \neq 1 \Rightarrow e = a\cdot k, \varphi(m) = b\cdot k$. It follows that factoring some generator $g$ of $\mathbb{Z}^*_m$ - 
 	\begin{align*}
 		x = g^b&, y = g^{2b}\\
 		x^e = g^{be} = g^{akb} &= (g^{bk})^a = 1^a = 1 \\
-		y^e = g^{2be} = g^{2akb} &= (g^{bk})^{2a} = 1^a = 1
+		y^e = g^{2be} = g^{2akb} &= (g^{bk})^{2a} = 1^{2a} = 1
 	\end{align*}
 	Hence $x^e \mod m$ from $\mathbb{Z}^*_m$ to $\mathbb{Z}^*_m$ is not one-to-one.
 \end{paragraph}
 
 \begin{paragraph}
-	b By Lagrange's theorem the order of an element $g$ of a group $G$
-	must divide the size of the group - $order(g)| |G|$. For $\mathbb{Z}^*_p$,
-	where p is prime we get that $order(g) | \varphi(p)(=p-1)$.
-	Given that $p-1 =\prod_i{q_i^{e^i}}$, where $q_i$ are primes. One can
-	check if a given $g$ is a generator of $\mathbb{Z}^*_p$ as follows - 
-
-	\begin{algorithm}
-	\begin{algorithmic}[]
-		\State $\text{is\_generator}( \textit{g} ):$
-		\For{\texttt{$q_i$ in $divisors$}}
-			\If {$q_i^{\frac{p-1}{q_i}}= 1 \tpmod p$} \Return false
-			\EndIf
-		  \EndFor
-		\State \Return true
-	\end{algorithmic}
+	b By Lagrange's theorem the order of an element $g$ of a group $G$ must divide the size of the group - $order(g) | |G|$. For $\mathbb{Z}^*_p$, where p is prime we get that $order(g) | \varphi(p)(=p-1)$. Given that $p-1 =\prod_i{q_i^{e^i}}$, where $q_i$ are primes, one can check if a given $g$ is a generator of $\mathbb{Z}^*_p$ as follows - 
+    \begin{algorithm}
+    	\begin{algorithmic}[]
+    		\State $\text{is\_generator}( \textit{g} ):$
+    		\For{\texttt{$q_i$ in $divisors$}}
+    			\If {$g^{\frac{p-1}{q_i}}= 1 \tpmod p$} \Return false
+    			\EndIf
+    		  \EndFor
+    		\State \Return true
+    	\end{algorithmic}
 	\end{algorithm}
 
-	$p-1$ can have at most $log(p)$ divisors, each iteration of the for-loop
-	takes $\mathcal{O}(log(p))$ for division and exponentiation. Overall the algorithm's
-	running time of $\mathcal{O}(log^2(p))$. \\
+	$p-1$ can have at most $log(p)$ divisors, each iteration of the for-loop takes $\mathcal{O}(log(p))$ for division and exponentiation. Overall the algorithm's running time is $\mathcal{O}(log^2(p))$.\\
 
-	Proof of correctness: $g$ is a generator of $\mathbb{Z}^*_p$ if $order(g) = p -1$.
-	Then for each $e_i < p - 1$, $g^{e_i} = g^{\frac{p-1}{q_i}} \neq 1 \tpmod p$. And the 
-	algorithm will return true correctly.
-
-	If $g$ is not a generator of $\mathbb{Z}^*_p$, we know that $\varphi(g) = n$
-	where $n|p - 1$.
-
+    If the algorithm returned true, it means that for each \(q_i\), \(g^{q_i} \neq e\). Assume that there is a divisor \(d\) of \(p - 1\) for which \(g^d = e\), for some integer \(c\), with \(q_j\) having a higher power in the factorization of \(p - 1\) than in that of \(d\), for some \(j\). This means that \(d \cdot x = \frac{p - 1}{q_j}\) for some integer \(x\). But since \(g^{\frac{p - 1}{q_j}} \neq e\) it follows that \(g^{d \cdot x} = (g^d)^x \neq e\), and \(g^d = e\), in contradiction to the assumption. So for all divisors of \(p - i\), \(g\) to the power of that divisor does not equal \(e\), and \(g\) is a generator.
+    
+    If the algorithm returned false, it has found a number \(d\), smaller than \(p - 1\), for which \(g^d = e\), meaning \(g\) is not a generator.
+    
+    Thus, in conclusion, the algorithm returned true \(\iff\) \(g\) is a generator.
 \end{paragraph}
+\newpage
 
 \section{Euler's function}
 \begin{paragraph}
-	a
+    a Let \(p\) be a prime number, \(e > 0\) and integer. Since \(p\) is prime, the only divisors of \(p^e\) are \(p^i\) for \(i = 1, ..., e\).
+    
+    This means that, for a number \(a\) to satisfy \(gcd(a, p^e) \neq 1\), \(a\) must be of the form \(a = p^i \cdot b\) for some integers \(i > 0, b \geq 0\).
+    
+    For \(i = 1\), there are exactly \(p^{e - 1}\) numbers of the form \(a = p \cdot b\) that are still smaller than or equal to \(p^e\). These include all such \(a\)'s for \(1 < i \leq e\).\\
+    
+    From this we get that there are \(p^e - p^{e - 1} = (p - 1) p^{e - 1}\) different \(a\)'s between 1 and \(p^e\) that satisfy \(gcd(a, p^e) = 1\), and so \(\varphi(p^e) = (p - 1) p^{e - 1}\).
 \end{paragraph}
+
+\begin{paragraph}
+    b Let \(m, n\) be two co-prime integers. From the Chinese Remainder Theorem, for each \(c\) that satisfies \(gcd(c, mn) = 1\) there is a unique pair \(a, b\) such that both \(c \equiv a \mod{m}\) and \(c \equiv b \mod{n}\). As such, we get that \(\varphi(mn) = \varphi(m) \cdot \varphi(n)\). \iffalse Can you go over this? \fi
+\end{paragraph}
+
+\begin{paragraph}
+    c From sub question \(b\) we get that \(\varphi(n) = \varphi(\prod\limits_i p_i^{e_i}) = \prod\limits_i \varphi(p_i^{e_i})\). From sub question \(a\) we know that for each \(i\), \(\varphi(p_i^{e_i}) = (p_i - 1) p_i^{e_i - 1}\). Putting everything together we get
+    \begin{align*}
+        \varphi(n) &= \varphi(\prod\limits_i p_i^{e_i})\\
+        &= \prod\limits_i \varphi(p_i^{e_i})\\
+        &= \prod\limits_i (p_i - 1) p_i^{e_i - 1}\\
+        &= \prod\limits_i p_i^{e_i} (1 - \frac{1}{p_i})\\
+        &= \prod\limits_i p_i^{e_i} \cdot \prod\limits_i (1 - \frac{1}{p_i})\\
+        &= n \prod\limits_i (1 - \frac{1}{p_i})
+    \end{align*}
+    
+    As required.
+\end{paragraph}
+\newpage
 
 \section{El-Gamal under BDDH}
 \begin{paragraph}
-	a El-Gamal doesn't achieve ciphertext indistinguishability. An adversary
-	may choose two messages $(m_1, m_2) = (1, m')$.
-	The adversary can then calculate for the received ciphertext $E = (B,C)$ - \\
+	a El-Gamal doesn't achieve ciphertext indistinguishability. An adversary may choose two messages $(m_1, m_2) = (e, m)$, with \(e\) being the identity element of \(G\), and \(m\) some other element from \(G\). The adversary can then calculate for the received ciphertext $E = (B,C)$ -
 	\begin{align*}
 		&x_1 = ALG(A, B) = ALG(g^a, g^b) = h^{ab} \\
-		&x_2 = ALG(g, C) = ALG(g, g^{ab}\cdot m) = 
+		&x_2 = ALG(g, C) = ALG(g, g^{ab} \cdot m') = 
 		\begin{cases}
-			h^{ab}, \mbox{ for } m' = 1 \\
-			ALG(g, g^{ab}\cdot m), \mbox{ for } m' = m
+			h^{ab}, \mbox{ for } m' = e \\
+			ALG(g, g^{ab} \cdot m), \mbox{ for } m' = m
 		\end{cases}
 	\end{align*}
 
-	The adversary will then return $b = 0$ if $x_1 = x_2$, and otherwise $b = 1$,
-	with $\Pr[b' = b] = 1$.
+	The adversary will then return $b = 0$ if $x_1 = x_2$, and otherwise $b = 1$, with $\Pr[b' = b] = 1$.
 \end{paragraph}
 
 \begin{paragraph}
-	b The key exchange works as follows: \\
-	Alice sends a message $A = g^a$. Bob sends a message $B = g^b$. Charlie
-	sends a message $C = g^c$.\\
-	Based on $a, B, C$ Alice computes $K = (ALG(B, C))^a = (ALG(g^b, g^c))^a
-	 = (h^{bc})^a = h^{abc}$. Similarly, Bob computes $K = (ALG(A,C))^b
-	  = h^{abc}$ and Charlie computes $K = (ALG(A,B))^c = h^{abc}$. \\
-	An adversary sniffing the communicating parties can learn $(g^a, g^b, g^c)$.
-	Under BDDH, that triplet together with the private key $(g^a, g^b, g^c, h^{abc})$
-	indistinguishable from $(g^a, g^b, g^c, h^d)$, meaning an adversary
-	can't distinguish between $K$ and a random element $h^d$ in the
-	key space $H$.
-
+	b The key exchange works as follows:
+	
+	Alice sends a message $A = g^a$. Bob sends a message $B = g^b$. Charlie sends a message $C = g^c$.
+	
+	Based on $a, B, C$ Alice computes $K = (ALG(B, C))^a = (ALG(g^b, g^c))^a = (h^{bc})^a = h^{abc}$. Similarly, Bob computes $K = (ALG(A,C))^b = h^{abc}$ and Charlie computes $K = (ALG(A,B))^c = h^{abc}$.\\
+	
+	An adversary sniffing the communicating parties can learn $(g^a, g^b, g^c)$. Under BDDH, that triplet together with the private key $(g^a, g^b, g^c, h^{abc})$ is indistinguishable from $(g^a, g^b, g^c, h^d)$, meaning an adversary can't distinguish between $K$ and a random element $h^d$ in the key space $H$.
 \end{paragraph}
+\newpage
 
 \section{Random self reducibility of DLOG}
-\begin{paragraph}
-	a 
-\end{paragraph}
+\quad Let \(\mathcal{A}\) be an algorithm as described in the question. We'll describe an algorithm \(\mathcal{B}\) that, using \(\mathcal{A}\) as a sub-routine, solves the DLOG problem for a given \(p, g, g^x\) with probability \(\frac{1}{2}\).
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\For{\texttt{\(i\) in \(1, ..., 700\)}}
+			\State Choose a random \(a_i \gets \mathbb{Z}_{p - 1}\)
+			\State \(b_i \gets \mathcal{A}(p, g, (g^x)^{a_i})\)
+			\If{\(g^{\frac{b_i}{a_i}} = g^x\)}
+			    \Return \(c_i \gets \frac{b_i}{a_i}\)
+			\EndIf
+		\EndFor
+		\State \Return \(\bot\)
+	\end{algorithmic}
+\end{algorithm}
+
+Since \(\mathcal{A}\) returns a correct answer for \(\frac{1}{1000}\) of the possible \(a_i\)'s, the odds of \(\mathcal{B}\) returning \(\bot\) are equal to the odds that \(\mathcal{A}\) returned a wrong value for each of the 700 calls we made to it. This, in turn is equal to \(\binom{700}{0} \cdot (\frac{1}{1000})^{0} (1 - (\frac{1}{1000})^{700}) \approx 0.496\). Conversely, the odds of a correct \(c_i\) being calculated and returned is \(\approx 0.5\).
+
+The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions and exponentiations. Since integer divisions and exponentiations can be performed in \(\mathcal{O}(\log{p})\) time, we get that \(\mathcal{B}\)'s running time is \(\mathcal{O}(\mathcal{A} + \log{p})\)
 
 \section{Recovering RSA's private-key is as hard as Factoring}
 \begin{paragraph}
-	a Given $m,e,d$, we'll find $k$ such that $k = \varphi(m)\cdot l$, where
-	$l$ is an odd integer. Notice that - 
+	a Given $m,e,d$, we'll find $k$ such that $k = \varphi(m)\cdot l$, where $l$ is an odd integer. Notice that - 
 	\begin{align*}
 		e\cdot d = 1&\tpmod {\varphi(m)} \Rightarrow \\
 		e\cdot d = 1 &+ C\varphi(m) \\
 		e\cdot d - 1 &= C(p-1)(q-1) = C\cdot 2a \cdot 2b = C\cdot 4ab
 	\end{align*}
-	Where we used that $p - 1 = 2a$, $q - 1 = 2b$, where $a, b$ are odd integers.
-	Since $\varphi(m)$ is even, $C\cdot \varphi(m)$ is also even. To calculate $k$,
-	we'll divide $ed-1$ by two, until receiving an odd number $k'$. Since $\varphi(m)/4$ is odd,
-	returning $k = 4k'$, we get the required number.
+	
+	Where we used that $p - 1 = 2a$, $q - 1 = 2b$, where $a, b$ are odd integers. Since $\varphi(m)$ is even, $C\cdot \varphi(m)$ is also even. To calculate $k$, we'll divide $ed-1$ by two, until receiving an odd number $k'$.\\
+	
+	Since $\varphi(m)/4$ is odd, returning $k = 4k'$, we get the required number.
 \end{paragraph}
+\newpage
 
 \begin{paragraph}
-	b Given an element $g \in \mathbb{Z}^*_m$ with an even order in $g \in \mathbb{Z}^*_p$
-	and an odd order in $g \in \mathbb{Z}^*_q$, and $k$ from section a, one can find
-	a non trivial square root of 1.
-	For $h = k/4$ (h is odd) - 
+	b Given an element $g \in \mathbb{Z}^*_m$ with an even order in $g \in \mathbb{Z}^*_p$ and an odd order in $g \in \mathbb{Z}^*_q$, and $k$ from section a, one can find a non trivial square root of 1. For $h = k/4$ (h is odd) - 
 	\begin{align*}
 		g^{2h} = g^{2Cab} = (g^{2a})^{Cb} = (g^{p-1})^{Cb} = 1\tpmod p \\
 		g^{2h} = g^{2Cab} = (g^{2b})^{Ca} = (g^{q-1})^{Ca} = 1\tpmod q
 	\end{align*}
-	From the chinese remainder theorem we get that - $g^{2h} = 1\tpmod{pq}$. \\
-	Since $g^{2h} = 1 \tpmod p \rightarrow g^h = \pm1\tpmod p$ and $h$ is odd and
-	$g$'s order is odd in $\mathbb{Z}^*_p$,	we know that it must be that $g^h = -1 \tpmod p$.
-	Similarly we get that $g^h = 1 \tpmod q$. Combining these, it follows
-	that $g^h$ is a non-trivial square root of 1 in $\mathbb{Z}^*_m$.
+	
+	From the Chinese Remainder Theorem we get that - $g^{2h} = 1\tpmod{pq}$.
+	
+	Since $g^{2h} = 1 \tpmod p \rightarrow g^h = \pm1\tpmod p$ and $h$ is odd and $g$'s order is odd in $\mathbb{Z}^*_p$,	we know that it must be that $g^h = -1 \tpmod p$. Similarly we get that $g^h = 1 \tpmod q$.\\
+	
+	Combining these, it follows that $g^h$ is a non-trivial square root of 1 in $\mathbb{Z}^*_m$.
 \end{paragraph}
 
 \begin{paragraph}
-	c We first prove that $\frac{1}{2}$ of the elements of $\mathbb{Z}^*_p$ are
-	of an even order. \\
-	If $p$ is a prime, then $\varphi(p) = p - 1 = 2a$. For some element $d$
-	such that $d|p-1$ the number of elements of order $d$ is $\varphi(d)$.
-	If $d$ is even, then for $c$ s.t. $d = 2c$ we get from $q2.b$ that
-	$\varphi(d) = \varphi(2c) = \varphi(2)\varphi(c) = \varphi(c)$.
-	If $d$ is odd, from Lagrange's theorem we get that $d|a$. Also for $c = 2d$,
-	$c|a$ and again $\varphi(d) = \varphi(c)$, concluding that the number
-	even-ordered elements is the same as the number of odd-ordered elements.
-	Since $\mathbb{Z}^*_p \times \mathbb{Z}^*_q \rightarrow \mathbb{Z}^*_{pq}$
-	is an isomorphism, a $\frac{1}{4}$ of all elements satisfy the condition.
+	c We first prove that $\frac{1}{2}$ of the elements of $\mathbb{Z}^*_p$ are of an even order.
+	
+	If $p$ is a prime, then $\varphi(p) = p - 1 = 2a$. For some element $d$ such that $d|p-1$ the number of elements of order $d$ is $\varphi(d)$. If $d$ is even, then for $c$ s.t. $d = 2c$ we get from $q2.b$ that $\varphi(d) = \varphi(2c) = \varphi(2)\varphi(c) = \varphi(c)$. If $d$ is odd, from Lagrange's theorem we get that $d|a$. Also for $c = 2d$, $c|a$ and again $\varphi(d) = \varphi(c)$, concluding that the number even-ordered elements is the same as the number of odd-ordered elements.\\
+	
+	Since $\mathbb{Z}^*_p \times \mathbb{Z}^*_q \rightarrow \mathbb{Z}^*_{pq}$ is an isomorphism, a $\frac{1}{4}$ of all elements satisfy the condition.
 \end{paragraph}
 
 \begin{paragraph}
@@ -168,25 +180,43 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-	In step 1, we pick a $k$ based on section $a$. In step 3, with a 
-	probability of ${\frac{1}{2}}$ we get a $g$ that satisfies section $b$, 
-	i.e. one that is of an even order in $\mathbb{Z}^*_p$ and of an odd
-	order in $\mathbb{Z}^*_q$, or vice-versa. If $g$ isn't co-prime to $m$,
-	then it is either $p$ or $q$, and we return	so in step 4.
-	In step 5 we check whether $g$ is a trivial square root, if it isn't, we
-	continue to step 6. From section $b$ we know that $g$ must be a non-trivial
-	square root, meaning either $g^k = 1 \tpmod p$ or $g^k = 1 \tpmod q$ and
-	in that case we calculate $gcd(g^k + 1, m)$ which will be either $p$ or $q$,
-	accordingly. \\
+	In step 1, we pick a $k$ based on section $a$. In step 3, with a probability of ${\frac{1}{2}}$ we get a $g$ that satisfies section $b$, i.e. one that is of an even order in $\mathbb{Z}^*_p$ and of an odd order in $\mathbb{Z}^*_q$, or vice-versa. If $g$ isn't co-prime to $m$, then it is either $p$ or $q$, and we return so in step 4. In step 5 we check whether $g$ is a trivial square root, if it isn't, we continue to step 6. From section $b$ we know that $g$ must be a non-trivial square root, meaning either $g^k = 1 \tpmod p$ or $g^k = 1 \tpmod q$ and in that case we calculate $gcd(g^k + 1, m)$ which will be either $p$ or $q$,
+	accordingly.\\
 
-	The probability of finding a correct $g$ in each iteration is $\frac{1}{2}$,
-	after $t$ iterations the probability is $1 - 2^{-t}$ with a time complexity
-	of $\mathcal{O}(t\cdot poly(n))$.
+	The probability of finding a correct $g$ in each iteration is $\frac{1}{2}$, after $t$ iterations the probability is $1 - 2^{-t}$ with a time complexity of $\mathcal{O}(t\cdot poly(n))$.
 \end{paragraph}
+\newpage
 
 \section{RSA with shared modulus}
 \begin{paragraph}
-	a 
+	a Let \(e_i, e_j\) be two co-prime public keys, \(m\) the shared modulus and \(x\) a message. Eve can, knowing \(c_i \equiv x^{e_i}\) and \(c_j \equiv x^{e_j}\), find two integers \(a, b\) s.t. \(a \cdot e_i + b \cdot e_j = 1\). These integers exist because \(gcd(e_i, e_j) = 1\). Now, to find the original message \(x\), Eve can calculate the following:
+	\begin{align*}
+	    c_i^a \cdot c_j^b &= (x^{e_i})^a \cdot (x^{e_j})^b\\
+	    &= x^{a \cdot e_i} \cdot x^{b \cdot e_j}\\
+	    &= x^{a \cdot e_i + b \cdot e_j}\\
+	    &= x^1 = x
+	\end{align*}
+	
+	\(^*\) Note that all the calculations are done \((\mod{m})\), but since Eve knows the value of \(m\), we can disregard it for the sake of the proof.
 \end{paragraph}
 
+\begin{paragraph}
+    b As we proved in Q5, given \(m, d_i, e_i\), one can factor \(m\) in polynomial time with a very high probability. Since, in this case, each user has his own pair of \(d_i, e_i\), they can all calculate the factorization of \(m\), and not just the TC.
+\end{paragraph}
+
+\begin{paragraph}
+    c The suggestion does not help neither \((a)\) nor \((b)\).\\
+    
+    For the first part, the solution stays the same, since we do not care about \(m, d_i, d_j\), nor the factors of \(m\). All that is required is that \(gcd(e_i, e_j) = 1\), which can still occur if \(m\) is the product of \(k > 2\) primes.\\
+    
+    As to the second part, the solution given in Q5 needs some minor tweaking. To factor \(m\), a user can find an integer \(a\) large enough, such that \(e_U \cdot d_U - 1 = 2^a \cdot b\), with \(b\) being odd. Then, the user can pick \(g\) at random, and calculate
+    \begin{align*}
+        h_0 &= g^b \mod{m}\\
+        \forall i = 1, ..., a \quad h_i &= h_{i - 1}^2 \mod{m}
+    \end{align*}
+    
+    Unless \(g\) is not "good", we get \(h_a = 1\), since \(h_a = (g^b)^{2^a} = g^{2^a \cdot b} = 1\). The user then takes the largest \(i\) for which \(h_i \neq 1\). If \(i > 0\) and \(h_i \neq -1\), then \(h_i - 1\) is a factor of \(m\). The user can continue doing this, each time looking for a factor of \(m \gets \frac{m}{h_i - 1}\), until he is left with with a prime \(m\), meaning he has found all of the factors of the original \(m\). Similar considerations to those in Q5 will give us that, with probability \(\frac{1}{2}\), the sampled \(g\) is "good", and advances us towards the solution.\\
+    
+    Thus, neither \((a)\) nor \((b)\) are helped by the suggestion.
+\end{paragraph}
 \end{document}
