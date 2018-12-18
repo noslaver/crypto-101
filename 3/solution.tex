@@ -20,13 +20,13 @@
 
 \section{}
 \begin{paragraph}
-	a Let $m=p\cdot q$ where $p,q$ are primes, and let $e$ be a positive integer that is not co-prime to $\varphi(m)$. Since $e$ is not co-prime to $\varphi(m)$ - $gcd(e, \varphi(m)) = k \neq 1 \Rightarrow e = a\cdot k, \varphi(m) = b\cdot k$. It follows that factoring some generator $g$ of $\mathbb{Z}^*_m$ - 
-	\begin{align*}
-		x = g^b&, y = g^{2b}\\
-		x^e = g^{be} = g^{akb} &= (g^{bk})^a = 1^a = 1 \\
-		y^e = g^{2be} = g^{2akb} &= (g^{bk})^{2a} = 1^{2a} = 1
-	\end{align*}
-	Hence $x^e \mod m$ from $\mathbb{Z}^*_m$ to $\mathbb{Z}^*_m$ is not one-to-one.
+    a Let \(p, q\) be two primes, \(m = p \cdot q\), and \(e\) a positive integer not co-prime with \(\varphi(m)\). Specifically, there exist \(a, b, c \in \mathbb{N}\) s.t. \(e = a \cdot b, \quad \varphi(m) = a \cdot c\).\\
+    
+    We know that for every \(x \in \mathbb{Z}^*_m\), \(x^{\varphi(m)} = x^{a \cdot c} = {x^a}^c = 1 \tpmod m\). Let \(x \neq 1\) be an element of \(\mathbb{Z}^*_m\) of maximum order. The mapping sends \(x^c\) to \({x^c}^e = {x^c}^{a \cdot b} = {x^{a \cdot c}}^b = 1\), and sends 1 to \(1^e = 1\) as well.\\
+    
+    Assume towards a contradiction that \(x^c = 1\). This means that \(\varphi(x) | c\), since otherwise there exists \(d \in \mathbb{Z}\) and \(r \in \mathbb{N}\) (that is smaller than \(\varphi(x)\)), such that \(c = d \cdot \varphi(x) + r\), and thus \(1 = x^c = x^{d \cdot \varphi(x) + r} = x^{d \cdot \varphi(x)} \cdot x^r = 1 \cdot x^r = x^r\), in contradiction to the order of \(x\) being \(\varphi(x)\). Now, since \(\varphi(x) | c\), it means that \(x^{\frac{\varphi(x)}{c}}\) has a larger order than \(x\), a contradiction to \(x\)'s order being maximal.\\
+    
+    In conclusion, we found \(x \neq \hat{x}\) such that \(x^e = \hat{x}^e\), meaning the mapping is not one-to-one.
 \end{paragraph}
 
 \begin{paragraph}
@@ -56,9 +56,9 @@
 \begin{paragraph}
     a Let \(p\) be a prime number, \(e > 0\) and integer. Since \(p\) is prime, the only divisors of \(p^e\) are \(p^i\) for \(i = 1, ..., e\).
     
-    This means that, for a number \(a\) to satisfy \(gcd(a, p^e) \neq 1\), \(a\) must be of the form \(a = p^i \cdot b\) for some integers \(i > 0, b \geq 0\).
+    This means that, for a number \(a\) to satisfy \(gcd(a, p^e) \neq 1\), it must be of the form \(a = p^i \cdot b\) for some integers \(i > 0, b \geq 0\).
     
-For \(i = 1\), there are exactly \(p^{e - 1}\) such numbers that are still smaller than or equal to \(p^e\). Among these numbers are all numbers of the form \(d = p^j \cdot x = p \cdot (p^{j - 1} \cdot x)\) for \(j = 2, ..., e\). Thus we don't need to count them separately.\\
+    For \(i = 1\), there are exactly \(p^{e - 1}\) such numbers that are still smaller than or equal to \(p^e\). Among these numbers are all numbers of the form \(d = p^j \cdot x = p \cdot (p^{j - 1} \cdot x)\) for \(j = 2, ..., e\). Thus we don't need to count them separately.\\
     
     From this we get that there are \(p^e - p^{e - 1} = (p - 1) p^{e - 1}\) different \(a\)'s between 1 and \(p^e\) that satisfy \(gcd(a, p^e) = 1\), and so \(\varphi(p^e) = (p - 1) p^{e - 1}\).
 \end{paragraph}
@@ -149,11 +149,11 @@ The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions a
 		g^{2h} = g^{2Cab} = (g^{2b})^{Ca} = (g^{q-1})^{Ca} = 1\tpmod q
 	\end{align*}
 	
-	From the Chinese Remainder Theorem we get that - $g^{2h} = 1\tpmod{pq}$.
+	From the Chinese Remainder Theorem we get that - $g^{2h} = 1\tpmod{pq}$.\\
 	
-	Since $g^{2h} = 1 \tpmod p \rightarrow g^h = \pm1\tpmod p$ and $h$ is odd and $g$'s order is odd in $\mathbb{Z}^*_p$,	we know that it must be that $g^h = -1 \tpmod p$. Similarly we get that $g^h = 1 \tpmod q$.\\
+	Assume towards a contradiction that \(g^h = \pm 1 \tpmod {pq}\). If \(g^h = 1 \tpmod {pq}\), there exists \(n \in \mathbb{N}\) s.t. \(g^h = 1 + npq\), and specifically that \(g^h = \pm 1 \tpmod p\). However, since \(h\) is odd, this will mean that the order of \(g\) in \(\mathbb{Z}^*_p\), which is even, divides an odd number, a contradiction. If \(g^h = -1 \tpmod {pq}\), there exists \(n \in \mathbb{N}\) s.t. \(g^h = -1 + npq\), and \(g^h = q - 1 \tpmod q\). This means that \(g^{2h} = 1 \tpmod q\), which in turns means the order of \(g\) in \(\mathbb{Z}^*_q\) divides \(2h\). Since the order is odd, it also divides \(h\), meaning \(g^h = 1 \tpmod q\), a contradiction, since we determined that \(g^h = q - 1 \tpmod q\) (and we know that \(q \neq 2\), since otherwise \(q \tpmod 4 \neq 3\)).\\
 	
-	Combining these, it follows that $g^h$ is a non-trivial square root of 1 in $\mathbb{Z}^*_m$.
+	Thus, it follows that $g^h$ must be a non-trivial square root of 1 in $\mathbb{Z}^*_m$.
 \end{paragraph}
 
 \begin{paragraph}
@@ -163,6 +163,7 @@ The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions a
 	
 	Since $\mathbb{Z}^*_p \times \mathbb{Z}^*_q \rightarrow \mathbb{Z}^*_{pq}$ is an isomorphism, a $\frac{1}{4}$ of all elements satisfy the condition.
 \end{paragraph}
+\newpage
 
 \begin{paragraph}
 	d The factoring algorithm:
