@@ -64,7 +64,7 @@
 \end{paragraph}
 
 \begin{paragraph}
-    b Let \(m, n\) be two co-prime integers. From the Chinese Remainder Theorem, for each \(c\) that satisfies \(gcd(c, mn) = 1\) there is a unique pair \(a, b\) such that both \(c \equiv a \mod{m}\) and \(c \equiv b \mod{n}\). As such, we get that \(\varphi(mn) = \varphi(m) \cdot \varphi(n)\). \iffalse Can you go over this? \fi
+    b Let \(m, n\) be two co-prime integers. From the Chinese Remainder Theorem, for each \(c\) that satisfies \(gcd(c, mn) = 1\) there is a unique pair \(a, b\) such that both \(c \equiv a \tpmod{m}\) and \(c \equiv b \tpmod{n}\). As such, we get that \(\varphi(mn) = \varphi(m) \cdot \varphi(n)\). \iffalse Can you go over this? \fi
 \end{paragraph}
 
 \begin{paragraph}
@@ -216,7 +216,7 @@ The algorithm performs at most 700 calls to \(\mathcal{A}\), integer divisions a
         \forall i = 1, ..., a \quad h_i &= h_{i - 1}^2 \mod{m}
     \end{align*}
     
-    Unless \(g\) is not "good", we get \(h_a = 1\), since \(h_a = (g^b)^{2^a} = g^{2^a \cdot b} = 1\). The user then takes the largest \(i\) for which \(h_i \neq 1\). If \(i > 0\) and \(h_i \neq -1\), then \(h_i - 1\) is a factor of \(m\). The user can continue doing this, each time looking for a factor of \(m \gets \frac{m}{h_i - 1}\), until he is left with with a prime \(m\), meaning he has found all of the factors of the original \(m\). Similar considerations to those in Q5 will give us that, with probability \(\frac{1}{2}\), the sampled \(g\) is "good", and advances us towards the solution.\\
+    Unless \(g\) is not "good", we get \(h_a = 1\), since \(h_a = (g^b)^{2^a} = g^{2^a \cdot b} = 1\). The user then takes the largest \(i\) for which \(h_i \neq 1\). If \(i > 0\) and \(h_i \neq -1\), then \(h_i - 1\) is a factor of \(m\). The user can continue doing this, each time looking for a factor of \(m \gets \frac{m}{h_i - 1}\), until he is left with a prime \(m\), meaning he has found all of the factors of the original \(m\). Similar considerations to those in Q5 will give us that, with probability \(\frac{1}{2}\), the sampled \(g\) is "good", and advances us towards the solution.\\
     
     Thus, neither \((a)\) nor \((b)\) are helped by the suggestion.
 \end{paragraph}
