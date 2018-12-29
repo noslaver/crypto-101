@@ -75,7 +75,25 @@
 \quad a
 
 \section{ZK and Commitments}
-\quad a
+\begin{paragraph}
+    a Bob will accept with $\Pr = 1$. Since $N \in L$, $y$ has exactly four square roots, which
+    Alice can find efficiently, given that she knows $p,q$ s.t. $N = p\cdot q$, one
+    of which most be the one sampled by Bob, meaning Bob will receive a list which follows
+    the protocol.
+\end{paragraph}
+
+\begin{paragraph}
+    b As we've seen in class $\mathbb{Z}^*_{pqr} \cong \mathbb{Z}^*_p \times \mathbb{Z}^*_q \times \mathbb{Z}^*_r$.
+    This means that a given number $y$, will have 8 square roots in this group.
+    Bob will accept only if $x$ is one of the roots that Alice chooses. Since Alice can't
+    know which is the root chosen by Bob, she can only guess 4 random roots.
+    The probability that $x$ is among those roots is $\frac{4}{8} = \frac{1}{2}$, hence
+    Bob accepts with $\Pr = \frac{1}{2}$.
+\end{paragraph}
+
+\begin{paragraph}
+    c The protocol isn't sound {\bf TODO}
+\end{paragraph}
 
 \section{Fun with secret sharing}
 \quad a
