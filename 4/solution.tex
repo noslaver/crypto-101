@@ -3,6 +3,10 @@
 \usepackage{harpoon}
 \usepackage{amsfonts}
 
+\makeatletter
+\newcommand{\tpmod}[1]{{\@displayfalse\pmod{#1}}}
+\makeatother
+
 \begin{document}
 \title{Introduction to Modern Cryptography - EX. 4}
 \author{Roi Koren 305428369\\ Noam Koren 204175004}
@@ -13,7 +17,53 @@
 \pagenumbering{roman}
 
 \section{Rabin's signatures}
-\quad a 
+\begin{paragraph}
+    b The signer calculates $f(x) = x^{\frac{(p-1)(q-1)}{2}}$ and returns $x \in QR_n \\\iff f(x) = 1$.
+\end{paragraph}
+
+\begin{paragraph}
+    c First we note that -
+    \begin{equation*}
+        p \equiv 3 \tpmod 8 \Rightarrow p \equiv 3 \tpmod 4
+    \end{equation*}
+    and that -
+    \begin{equation*}
+        q \equiv 7 \tpmod 8 \Rightarrow q \equiv 3 \tpmod 4  
+    \end{equation*}
+    As we've seen, we can then calculate - $x_p = \pm l^{\frac{p+1}{4}}$, 
+    $x_q = \pm l^{\frac{q+1}{4}}$. The square roots are $(x_p, x_q), (-x_p, x_q), 
+    (x_p, -x_q), (-x_p, -x_q)$.
+\end{paragraph}
+
+\begin{paragraph}
+    d The verifier receives $(m, \sqrt{l})$. He then calculates $l$ and accepts if
+    it is equal to any of $m, -m, 2m, -2m$.
+\end{paragraph}
+
+\begin{paragraph}
+    e We'll split for 2 cases. {\bf1)} $l = \pm m$. Clearly, the same signature holds for the 4 messages $m, -m, \frac{1}{2}m, -\frac{1}{2}m$. 
+    {\bf2)} $l = \pm 2m$. Clearly, the same signature holds for the 4 messages $m, -m, 2m, -2m$.
+\end{paragraph}
+
+\begin{paragraph}
+    f If $m \in (\frac{n}{8}, \frac{n}{4})$ the other possible messages which may have
+    the same signature belong to the following intervals - 
+    $2m \in (\frac{n}{4}, \frac{n}{2})$, $-2m \in (\frac{n}{2}, \frac{3n}{4})$,
+    $-m \in (\frac{3n}{4}, \frac{7n}{8})$, $\frac{m}{2} \in (\frac{n}{16}, \frac{n}{8})$,
+    $\frac{m}{2} \in (\frac{7n}{8}, \frac{15n}{16})$. Notice all of the intervals are pairwise disjoint.
+    The verification process can now include a check whether the received message $m$,
+    is in the appropriate interval.
+\end{paragraph}
+
+\begin{paragraph}
+    g The scheme is not secured under such a notion. An attacker can request two legal pairs - 
+    $(m_1, \sqrt{l_1}), (m_2, \sqrt{l_2})$. He can then build a new message $m = l_1 \cdot l_2$,
+    whose signature is $Sign(m) = \sqrt{l_1 \cdot \l_2} = \sqrt{l_1}\cdot \sqrt{l_2}$. Notice that $l_1, l_2 \in QR_n \Rightarrow l_1 \cdot l_2 \in QR_n$.
+\end{paragraph}
+
+\begin{paragraph}
+    h HELLO
+\end{paragraph}
 
 \section{Schnorr signature}
 \quad a 
