@@ -69,7 +69,17 @@
 \quad a 
 
 \section{RSA signatures via CRT}
-\quad a 
+\begin{paragraph}
+    a Given an error calculating $S_q$, gives $S_q' = S_q + \varepsilon$, one gets the following
+    corrupted signature - $S' = q\cdot inv(q, p)\cdot S_p + p\cdot inv(p,q)\cdot S_q' =
+    S + p\cdot inv(p,q)\cdot \varepsilon$, where $S$ is the correct signature. Given both $S, S'$,
+    one can calculate their difference - $S' - S = p\cdot \varepsilon\cdot inv(p,q) \Rightarrow p|S'-S$.
+    Using $gcd(S' - S, N)$ we can find $p$.
+\end{paragraph}
+
+\begin{paragraph}
+    b HELLO
+\end{paragraph}
 
 \section{Commitments}
 \quad a
