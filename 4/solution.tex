@@ -58,7 +58,7 @@
 \begin{paragraph}
     g The scheme is not secured under such a notion. An attacker can request two legal pairs - 
     $(m_1, \sqrt{l_1}), (m_2, \sqrt{l_2})$. He can then build a new message $m = l_1 \cdot l_2$,
-    whose signature is $Sign(m) = \sqrt{l_1 \cdot \l_2} = \sqrt{l_1}\cdot \sqrt{l_2}$.
+    whose signature is $Sign(m) = \sqrt{l_1 \cdot l_2} = \sqrt{l_1}\cdot \sqrt{l_2}$.
     Notice that $l_1, l_2 \in QR_n \Rightarrow l_1 \cdot l_2 \in QR_n$ meaning the given signature
     is indeed a valid signature.
 \end{paragraph}
@@ -116,10 +116,41 @@
 \end{paragraph}
 
 \begin{paragraph}
-    c The protocol isn't sound {\bf TODO}
+    c The protocol isn't sound, since as we've seen, Bob accepts a wrong answer w.p. $\frac{1}{2}$.
+    To improve soundness, one can repeat the protocol $n$ times, which will decrease the probability
+    of accepting a false statement to $2^{-n}$.
+\end{paragraph}
+
+\begin{paragraph}
+    d TODO
 \end{paragraph}
 
 \section{Fun with secret sharing}
-\quad a
+\begin{paragraph}
+    a Suppose w.l.g that Alice is the honest colonel. Alice sees - 
+    \begin{equation*}
+    f =
+        \begin{cases}
+            f(Alice) + f(Bob) + r, & \mbox{w.p } \frac{1}{2} \\
+            f(Alice) + f(Carol) + r, & \mbox{w.p } \frac{1}{2}
+        \end{cases}
+    \end{equation*}
+    Where $r$ is an unknown random element. Since both outcomes appear random to Alice,
+    differentiating between the two, is equivalent to her differentiating between two random elements,
+    which she cannot.
+\end{paragraph}
+
+\begin{paragraph}
+    b An outside investigator can try all possible trios of colonels, of which there are
+    $\binom{5}{3} = 10$. Each colonel is part of 6 trios, meaning the result will be 4 correct
+    answers for the trios where the cheater is not present, and the cheating colonel is the one
+    not present in any of those trios.
+\end{paragraph}
+
+\begin{paragraph}
+    c A modification of this scheme can include a commitment by each of the colonels, where by
+    each colonel commits to his share when the secret is shared. When a launch is requested,
+    each colonel will reveal to make sure his secret hasn't been modified.
+\end{paragraph}
 
 \end{document}
