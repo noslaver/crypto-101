@@ -58,11 +58,25 @@
 \begin{paragraph}
     g The scheme is not secured under such a notion. An attacker can request two legal pairs - 
     $(m_1, \sqrt{l_1}), (m_2, \sqrt{l_2})$. He can then build a new message $m = l_1 \cdot l_2$,
-    whose signature is $Sign(m) = \sqrt{l_1 \cdot \l_2} = \sqrt{l_1}\cdot \sqrt{l_2}$. Notice that $l_1, l_2 \in QR_n \Rightarrow l_1 \cdot l_2 \in QR_n$.
+    whose signature is $Sign(m) = \sqrt{l_1 \cdot \l_2} = \sqrt{l_1}\cdot \sqrt{l_2}$.
+    Notice that $l_1, l_2 \in QR_n \Rightarrow l_1 \cdot l_2 \in QR_n$ meaning the given signature
+    is indeed a valid signature.
 \end{paragraph}
 
 \begin{paragraph}
-    h HELLO
+    h In order to build a secure signature scheme we assume we have a random oracle $\mathcal{H}$.
+    The signature scheme would be $\sigma(m) = \sqrt{\mathcal{H}(m)}$.
+    Assume towards a contradiction that there exists an adversary $\mathcal{A}$ of complexity $(t, \varepsilon)$,
+    that can query $\mathcal{H}$ and the signer and is able to forge a valid signature. We'll build an adversary
+    $\mathcal{B}$ that is able of factoring. When $\mathcal{A}$ requests queries from $\mathcal{H}$, if that value was
+    previously requested, respond as before, else, choose a random value $x \in (\frac{n}{8}, \frac{n}{4})$,
+    save the result and return $x^2$. When $\mathcal{A}$ requests a signature for $m$, if that value was
+    previously requested, respond as before, else, choose a random value $x \in (\frac{n}{8}, \frac{n}{4})$,
+    save the result and return $x$. \\
+    After $t$ queries, $\mathcal{A}$ will return a legal message-signature pair, $(m, \sigma)$ with probability $\varepsilon$.
+    Since when $\mathcal{A}$ requested $\mathcal{H}$, we returned $x^2 \Rightarrow \sigma = \sqrt{(x^2)}$. This
+    combined with $x$ which we saved gives us two roots of $x^2$, which we can use to factorize
+    $\mathcal{H}(m)$ w.p $\frac{1}{2}$. Hence, forging a signature is as hard as factoring.
 \end{paragraph}
 
 \section{Schnorr signature}
@@ -78,7 +92,7 @@
 \end{paragraph}
 
 \begin{paragraph}
-    b HELLO
+    b TODO
 \end{paragraph}
 
 \section{Commitments}
@@ -94,7 +108,7 @@
 
 \begin{paragraph}
     b As we've seen in class $\mathbb{Z}^*_{pqr} \cong \mathbb{Z}^*_p \times \mathbb{Z}^*_q \times \mathbb{Z}^*_r$.
-    This means that a given number $y$, will have 8 square roots in this group.
+    This means that any number $y$ from the group will have 8 square roots.
     Bob will accept only if $x$ is one of the roots that Alice chooses. Since Alice can't
     know which is the root chosen by Bob, she can only guess 4 random roots.
     The probability that $x$ is among those roots is $\frac{4}{8} = \frac{1}{2}$, hence
