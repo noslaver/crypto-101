@@ -80,7 +80,56 @@
 \end{paragraph}
 
 \section{Schnorr signature}
-\quad a 
+\begin{paragraph}
+    a The modification is as follows: to sign a message \(m\), send \((b, c)\), when we have \(a = g^r, b = H(a, m), c = r + xb\), with \(r\) being chosen at random from \(\mathbb{Z}_q\).
+    
+    To verify, one will first compute \(a = g^c \cdot (h^b)^{-1}\), then verify that \(b = H(a, m)\).\\
+    
+    We have
+    \begin{align*}
+        a' = g^c \cdot(h^b)^{-1} = g^{r + xb} \cdot(h^b)^{-1} = g^r \cdot g^{xb} \cdot(h^b)^{-1} = g^r \cdot h^b \cdot(h^b)^{-1} = g^r
+    \end{align*}
+    
+    Thus, the \(a\) we computed is equal to the signer's \(a\) that was not sent, and correctness follows. We need only exponentiate twice in \(\mathbb{Z}_q\) and find an inverse once, as well as call the global hash function \(H\) once, all of which can be done in \(\log q\) time, meaning the verification process can be computed efficiently.
+\end{paragraph}
+
+\begin{paragraph}
+    b To do this, we'll modify the public key to equal \(h^{-1}\). Using the previous scheme, one will now calculate \(a = g^c \cdot h'^b\), with the rest of the scheme staying the same.
+    \begin{align*}
+        a' = g^c \cdot h'^b = g^{r + xb} \cdot(h^{-1})^b = g^r \cdot g^{xb} \cdot(h^b)^{-1} = g^r \cdot h^b \cdot(h^b)^{-1} = g^r
+    \end{align*}
+    
+    Once again, correctness quickly follows. We have performed only 2 exponentiations, and did not require finding an inverse, as required.
+\end{paragraph}
+
+\begin{paragraph}
+    c Given two signatures, \((a = g^r, b, c = r + xb)\) and \((a, b', c' = r + xb')\), one can simply calculate, since with high probability \(b \neq b'\)
+    \begin{align*}
+        \frac{c - c'}{b - b'} = \frac{r + xb - r - xb'}{b - b'} = \frac{x(b - b')}{b - b'} = x
+    \end{align*}
+    
+    And find \(x\) thus.
+\end{paragraph}
+
+\begin{paragraph}
+    d Given two signatures, of two different known messages, with consecutive \(r\)-s, \((a = g^r, b, c = r + xb)\) and \((a' = g^{r + 1} = g \cdot g^r, b' c' = (r + 1) + xb')\), since again \(b \neq b'\), we get
+    \begin{align*}
+        \frac{c - c' + 1}{b - b'} = \frac{r + xb - r - 1 - xb' + 1}{b - b'} = \frac{x(b - b')}{b - b'} = x
+    \end{align*}
+    
+    Again, quickly finding \(x\)
+\end{paragraph}
+\newpage
+
+\begin{paragraph}
+    e Given three signatures, \((a_1, b_1, c_1 = r_1 + xb_1 = r_0 + C + xb_1)\), \((a_2, b_2, c_2 = r_2 + xb_2 = r_0 + 2C + xb_2)\) and \((a_3, b_3, c_3 = r_3 + xb_3 = r_0 + 3C + xb_3)\), we will calculate
+    \begin{align*}
+        \frac{c_3 + c_1 - 2c_2}{b_3 + b_1 - 2b_2} &= \frac{r_0 + 3C + xb_3 + r_0 + C + xb_1 - 2(r_0 + 2C + xb_2)}{b_3 + b_1 - 2b_2}\\
+        &= \frac{x(b_3 + b_1 - 2b_2)}{b_3 + b_1 - 2b_2} = x
+    \end{align*}
+    
+    Again, finding \(x\) rather quickly.
+\end{paragraph}
 
 \section{RSA signatures via CRT}
 \begin{paragraph}
@@ -96,13 +145,51 @@
 \end{paragraph}
 
 \section{Commitments}
-\quad a
+\begin{paragraph}
+    a Given \((y, c)\), for Bob to be able to identify \(b\) means he can distinguish between \(f(r)\) and \(f(r) \odot y\). \(r\) is uniformly distributed over \(\mathbb{G}\), and so \(f(r)\) is as well. We also know that \(f(r) \odot y = f(r) \odot f(x) = f(r \odot x)\) is also uniformly distributed over \(\mathbb{G}\), since \(r \odot x\) is. Bob cannot efficiently distinguish between two uniformly distributed random variables, and so cannot identify \(b\).
+\end{paragraph}
+
+\begin{paragraph}
+    b Continuing on the previous section, if Bob could find for the given \(c\) an \(x'\) satisfying \(f(x') = c\), he could still not identify \(b\). This is because he will be left with one of two numbers, \(r\) and \(r \odot x\), both of which are uniformly distributed over \(\mathbb{G}\). Thus, again, Bob cannot discern \(b\).
+\end{paragraph}
+
+\begin{paragraph}
+    c Assume Alice managed to cheat, and found a commitment \(c\), and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open the commitment. It means that:
+    \begin{align*}
+        c &= f(r_0)\\
+        c &= y \odot f(r_1) = f(x) \odot f(r_1) = f(x \odot r_1)
+        f(r_0) &= f(x \odot r_1)
+    \end{align*}
+    
+    Since \(f\) is a permutation, a one-to-one function, this means that the above becomes \(r_0 = x \odot r_1 \rightarrow x = r_0 \odot r_1\). Alice cannot find \(x\) efficiently, since that would mean to find the inverse of \(f\), and so cannot efficiently find a commitment \(c\) and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open it, and therefor cannot cheat.
+\end{paragraph}
+
+\begin{paragraph}
+    d Bob should not agree to this. From the previous section, if Alice chooses \(y\), i.e. picks \(x\) at random and calculates \(y = f(x)\), she knows how to generate a commitment \(c\), and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open the commitment. She only needs to pick a random \(r_0\), and set \(r_1 = x \odot r_0\), and send the commitment \(c = f(r_0)\).
+    
+    If Alice wants to reveal 0, she will send \((r_0, 0)\), and if she wants to reveal 1, she'll send \((r_1, 1)\).
+    \begin{align*}
+        f(r_1) \odot y = f(r_1) \odot f(x) = f(r_1 \odot x) = f(x \odot r_0 \odot x) = f(r_0) = c
+    \end{align*}
+    
+    Meaning Alice can cheat, and Bob should not agree to her suggestion.
+\end{paragraph}
+
+\begin{paragraph}
+    e Alice can agree, if she wants to. If Bob chooses \(y\), and therefor knows \(x\), he still cannot distinguish between \(f(r_0)\) and \(y \odot f(r_1) = f(x) \odot f(r_1) = f(x \odot r_1)\), at least not without finding the inverse of \(f\), which is assumed he cannot do efficiently. Thus Alice can agree to Bob's suggestion.
+\end{paragraph}
+
+\begin{paragraph}
+    f If Bob gets to pick the parameters, it means he knows the factorization of \(n\). This means that he can pick \(e = 2\), and choose a \(y \in QNR^+_{pq}\).
+    
+    When Bob receives a commitment \(c\), he can efficiently check if \(c \in QR_{pq}\). If \(b = 0\), it must be that \(c = f(r) = r^2 \in QR_{pq}\). Otherwise, as we've seen in recitation, \(c = y \cdot f(r) = y \cdot r^2 \not\in QR_{pq}\). Thus Bob knows that \(b = 0 \iff c \in QR_{pq}\), and he can open the commitment without Alice's reveal.
+\end{paragraph}
 
 \section{ZK and Commitments}
 \begin{paragraph}
     a Bob will accept with $\Pr = 1$. Since $N \in L$, $y$ has exactly four square roots, which
     Alice can find efficiently, given that she knows $p,q$ s.t. $N = p\cdot q$, one
-    of which most be the one sampled by Bob, meaning Bob will receive a list which follows
+    of which must be the one sampled by Bob, meaning Bob will receive a list which follows
     the protocol.
 \end{paragraph}
 
