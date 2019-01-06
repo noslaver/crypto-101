@@ -223,7 +223,26 @@
 
 \begin{paragraph}
     b As we've seen in class $\mathbb{Z}^*_{pqr} \cong \mathbb{Z}^*_p \times \mathbb{Z}^*_q \times \mathbb{Z}^*_r$.
-    This means that any number $y$ from the group will have 8 square roots.
+    We'll prove that $y \in QR_{pqr} \iff y_p \in QR_p \land y_q \in QR_q \land y_r \in QR_r$ - 
+
+    \begin{align*}
+        y \in QR_pqr
+        &\Rightarrow \exists x : x^2 = y \tpmod N \\
+        &\Rightarrow \forall i = p,q,r : 0 = x^2 - y \tpmod N \tpmod i \\
+        &\Rightarrow \forall i = p,q,r : 0 = x^2 - y \tpmod i \\
+        &\Rightarrow \forall i = p,q,r : y_i = x^2 \tpmod i \\
+        &\Rightarrow \forall i = p,q,r : y_i \in QR_i
+    \end{align*}
+
+    \begin{align*}
+        \forall i = p,q,r: y_i \in QR_i
+        &\Rightarrow \forall i : \exists x_i \in \mathbb{Z}_i^*: x_i^2 = y_i \\
+        &\Rightarrow (x_p^2, x_q^2, x_r^2) = (y_p, y_q, y_r) \\
+        &\Rightarrow x^2 = y \tpmod N \\
+        &\Rightarrow y \in QR_N
+    \end{align*}
+
+    This means that any number $y = (y_p, y_q, y_r)$ from the group will have 8 square roots = $(\pm x_p, \pm x_q, \pm x_r)$.
     Bob will accept only if $x$ is one of the roots that Alice chooses. Since Alice can't
     know which is the root chosen by Bob, she can only guess 4 random roots.
     The probability that $x$ is among those roots is $\frac{4}{8} = \frac{1}{2}$, hence
