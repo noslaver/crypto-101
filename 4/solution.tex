@@ -133,15 +133,43 @@
 
 \section{RSA signatures via CRT}
 \begin{paragraph}
-    a Given an error calculating $S_q$, gives $S_q' = S_q + \varepsilon$, one gets the following
-    corrupted signature - $S' = q\cdot inv(q, p)\cdot S_p + p\cdot inv(p,q)\cdot S_q' =
-    S + p\cdot inv(p,q)\cdot \varepsilon$, where $S$ is the correct signature. Given both $S, S'$,
-    one can calculate their difference - $S' - S = p\cdot \varepsilon\cdot inv(p,q) \Rightarrow p|S'-S$.
-    Using $gcd(S' - S, N)$ we can find $p$.
+    a Assume we know a correct signature\(S = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q\) and a signature where a mistake happened \(S' = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q'\), where \(S_p \equiv m^d \mod{p}\), \(S_q \equiv m^d \mod{q}\) and \(S_q' \neq S_q\). One can calculate
+    \begin{align*}
+        S - S' = p \cdot inv(p, q) (S_q - S_q')
+    \end{align*}
+    
+    From this we know that \(p|S - S'\). We next show that \(gcd(S - S', N) = p\).
+    We know that all of the divisors of \(N\) are either of the form \(iq\) or of the form \(ip\), for some \(i\). Assume towards a contradiction that \(gcd(S - S', N) = iq\), for some \(i \leq p\). If \(i = p\)
+    \begin{align*}
+        S - S' \equiv 0 \mod{N} &\rightarrow S_q - S_q' \equiv 0 \mod{N}\\
+        &\rightarrow S_q' \equiv m^d \mod{N}\\
+        &\rightarrow S_q' \equiv m^d \mod{q}
+    \end{align*}
+    
+    Since neither \(p\) nor \(inv(p, q)\) are equal to \(0 \mod{N}\). This, of course, in contradiction with the definition of \(S_q'\).
+    
+    If \(i < p\), we know that \(iq|S - S'\), and specifically that \(q|S - S'\), meaning there exists \(k\) s.t. \(S - S' \equiv k \cdot q \mod{N}\). We also know that for \(l = inv(p, q) (S_q - S_q')\), we get that \(S - S' \equiv l \cdot p\). This means that \(k \cdot q = l \cdot p \rightarrow q = p \cdot l \cdot k^{-1}\). Since \(p, q\) are both prime numbers, it must be that \(l = q\) and \(k = p\). But that cannot be, since we proved earlier that \(gcd(S - S', N) \neq pq\).
+    
+    Therefor \(gcd(S - S', N)\) is not of the form \(iq\). This means that it is of the form \(ip\) for some \(i\). From this, there exists \(k, l\) such that
+    \begin{align*}
+        k \cdot (S - S') + l \cdot N &= ip\\
+        k \cdot p \cdot inv(p, q) (S_q - S_q') + l \cdot p \cdot q &= i \cdot p\\
+        k \cdot inv(p, q) (S_q - S_q') + l \cdot q &= i\\
+    \end{align*}
+    
+    This implies that \(gcd(q, inv(p, q) (S_q - S_q')) \geq i\). But since \(q\) is prime, and as we've seen before does not divide \(S_q - S_q'\), and \(inv(p, q) \leq q\) by definition, \(gcd(q, inv(p, q) (S_q - S_q')) = 1\). Therefor \(i = 1\), and by Euclid's algorithm we can find \(p = gcd(S - S', N)\), and \(q = \frac{N}{p}\).
 \end{paragraph}
 
 \begin{paragraph}
-    b TODO
+    b Assume we know a message \(m\) to be signed, alongside with a corrupted signature \(S' = q \cdot q^{-1} \cdot S_p + p \cdot p^{-1} \cdot S_q'\), with \(q^{-1} = inv(q, p)\), \(p^{-1} = inv(p, q)\), \(S_p = m^d \mod{p}\) and \(S_q' \neq m^d \mod{q}\). If we calculate
+    \begin{align*}
+        {(S')}^e \mod{p} &= \left({\left(q \cdot q^{-1} \cdot S_p\right)}^e \mod{p} + {\left(p \cdot p^{-1} \cdot S_q'\right)}^e \mod{p}\right) \mod{p}\\
+        &= m^{de} \mod{p} = m \mod{p}\\
+        {(S')}^e \mod{q} &= \left({\left(q \cdot q^{-1} \cdot S_p\right)}^e \mod{q} + {\left(p \cdot p^{-1} \cdot S_q'\right)}^e \mod{q}\right) \mod{q}\\
+        &= \left(S_q'\right)^{e} \mod{q} \neq {\left(m^d \mod{q}\right)}^e \mod{q} = m \mod{q}
+    \end{align*}
+    
+    This is because every other summand in the expanded polynomial is zeroed-out, as it is of the form \(pq \cdot A \mod{N( = pq)} \equiv 0 \mod{N}\). This means that \(\left(S'\right)^e - m = 0 \mod{p}\), and \(p|\left(S'\right)^e - m\). From this point, due to the same considerations as the previous section, we get that \(gcd(\left(S'\right)^e - m, N) = p\), and can find \(p, q\) easily.
 \end{paragraph}
 
 \section{Commitments}
