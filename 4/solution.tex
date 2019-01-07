@@ -133,7 +133,7 @@
 
 \section{RSA signatures via CRT}
 \begin{paragraph}
-    a Assume we know a correct signature\(S = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q\) and a signature where a mistake happened \(S' = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q'\), where \(S_p \equiv m^d \mod{p}\), \(S_q \equiv m^d \mod{q}\) and \(S_q' \neq S_q\). One can calculate
+    a Assume we know a correct signature \(S = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q\) and a signature where a mistake happened \(S' = q \cdot inv(q, p) \cdot S_p + p \cdot inv(p, q) \cdot S_q'\), where \(S_p \equiv m^d \mod{p}\), \(S_q \equiv m^d \mod{q}\) and \(S_q' \neq S_q\). One can calculate
     \begin{align*}
         S - S' = p \cdot inv(p, q) (S_q - S_q')
     \end{align*}
@@ -185,8 +185,8 @@
     c Assume Alice managed to cheat, and found a commitment \(c\), and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open the commitment. It means that:
     \begin{align*}
         c &= f(r_0)\\
-        c &= y \odot f(r_1) = f(x) \odot f(r_1) = f(x \odot r_1)
-        f(r_0) &= f(x \odot r_1)
+        c &= y \odot f(r_1) = f(x) \odot f(r_1) = f(x \odot r_1) \\
+        \Rightarrow f(r_0) &= f(x \odot r_1)
     \end{align*}
     
     Since \(f\) is a permutation, a one-to-one function, this means that the above becomes \(r_0 = x \odot r_1 \rightarrow x = r_0 \odot r_1\). Alice cannot find \(x\) efficiently, since that would mean to find the inverse of \(f\), and so cannot efficiently find a commitment \(c\) and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open it, and therefor cannot cheat.
