@@ -191,6 +191,7 @@
     
     Since \(f\) is a permutation, a one-to-one function, this means that the above becomes \(r_0 = x \odot r_1 \rightarrow x = r_0 \odot r_1\). Alice cannot find \(x\) efficiently, since that would mean to find the inverse of \(f\), and so cannot efficiently find a commitment \(c\) and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open it, and therefor cannot cheat.
 \end{paragraph}
+\newpage
 
 \begin{paragraph}
     d Bob should not agree to this. From the previous section, if Alice chooses \(y\), i.e. picks \(x\) at random and calculates \(y = f(x)\), she knows how to generate a commitment \(c\), and two reveals \((r_0, 0)\) and \((r_1, 1)\) that both open the commitment. She only needs to pick a random \(r_0\), and set \(r_1 = x \odot r_0\), and send the commitment \(c = f(r_0)\).
@@ -226,7 +227,7 @@
     We'll prove that $y \in QR_{pqr} \iff y_p \in QR_p \land y_q \in QR_q \land y_r \in QR_r$ - 
 
     \begin{align*}
-        y \in QR_pqr
+        y \in QR_{pqr}
         &\Rightarrow \exists x : x^2 = y \tpmod N \\
         &\Rightarrow \forall i = p,q,r : 0 = x^2 - y \tpmod N \tpmod i \\
         &\Rightarrow \forall i = p,q,r : 0 = x^2 - y \tpmod i \\
@@ -258,7 +259,7 @@
 \begin{paragraph}
     d The new protocol is as such: after Bob sends \(y = x^2\) to Alice, she calculates four square roots \(x_1, x_2, x_3, x_4\), and commits to them. Bob then reveals \(x\), and Alice reveals \(x_i, i \in [4]\) s.t. \(x_i = x\). Bob accepts if indeed that is the case.\\
     
-    Completeness: Assuming both sides are honest, and \(N = pq\), Alice will be able to find the four square roots, and commit to them. \(x\) must be on of those roots, since \(y\) has exactly four square roots in \(mathbb{Z}^*_{pq}\). w.l.o.g., \(x_1 = x\). Alice can then reveal the appropriate commitment, and prove she knew \(x\) is one of the roots of \(y\), meaning Bob will accept w.p. 1, and the system is complete.\\
+    Completeness: Assuming both sides are honest, and \(N = pq\), Alice will be able to find the four square roots, and commit to them. \(x\) must be on of those roots, since \(y\) has exactly four square roots in \(\mathbb{Z}^*_{pq}\). w.l.o.g., \(x_1 = x\). Alice can then reveal the appropriate commitment, and prove she knew \(x\) is one of the roots of \(y\), meaning Bob will accept w.p. 1, and the system is complete.\\
     
     Soundness: Assume \(N = pqr\) and Alice is trying to convince Bob otherwise, that \(N = pq\). Alice can, at most, guess four different roots, out of the 8 that \(y\) has in \(\mathbb{Z}^*_{pqr}\), and hope \(x\) is one of them. Thus, w.p. \(\frac{1}{2}\), Bob will reject Alice's proof, and the system is sound.\\
     
