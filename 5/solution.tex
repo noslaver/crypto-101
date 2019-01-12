@@ -18,7 +18,33 @@
 
 \section{Commitments}
 \begin{paragraph}
-    a 
+    a Even if computationally-unbounded, Bob can learn nothing about $s$.
+\end{paragraph}
+
+\begin{paragraph}
+    b TODO
+\end{paragraph}
+
+\begin{paragraph}
+    c Checking if $p, q$ are primes of length larger then 512 bits is trivial, and that $p = 2q + 1$.
+    To check if $g_1, g_2 \in \mathbb{Z}^*_p$ are of order $q$, since $\varphi(p) = 2q$, it is suffice to check that
+    $g_{1,2}^q = 1\tpmod p$ and $g_{1,2}^2 \neq 1 \tpmod p$.
+\end{paragraph}
+
+\begin{paragraph}
+    d Alice can indeed cheat, given the ability to cheat the scheme's parameters.
+    Alice can choose $g_1, g_2$ s.t. $g_1 = g_2^t$. If after publishing a commitment $comm_r(s) = C = g_1^sg_2^r \tpmod p$,
+    she would like to reveal $(s', r')$ instead of $(s, r)$, she can calculate $r' = r + t(s - s')$. And indeed, Bob will 
+    calculate $C' = g_1^{s'}g_2^{r'} = g_1^{s'}g_2^{r + t(s-s')} = g_1^{s'}g_2^{t(s-s')}g_2^r = g_1^sg_2^r = C$.
+\end{paragraph}
+
+\begin{paragraph}
+    e As we've seen in section a, Bob learns nothing of $s$ from $C$. This is true for every set of parameters. Thereby, Bob
+    can not cheat.
+\end{paragraph}
+
+\begin{paragraph}
+    f As a result of the previous two sections, letting Bob choose the parameters will keep the protocol secure.
 \end{paragraph}
 
 \section{ZK}
