@@ -19,10 +19,16 @@
 \section{Commitments}
 \begin{paragraph}
     a Even if computationally-unbounded, Bob can learn nothing about $s$.
+    Since $g_2$ is a generator in $\mathbb{G}$, for each $s$ exists $r$ s.t. $g_2^r = hg_1^{-s}$.
+    From this it follows that given $C$, Bob can only see a random value, hence learning nothing.
 \end{paragraph}
 
 \begin{paragraph}
-    b TODO
+    b Alice can't change $s$ without Bob noticing. Assume by contradiction that she can, i.e. Alice
+    can calculate $s', r'$ s.t. $comm_r(s) = comm_{r'}(s') \Rightarrow g_1^sg_2^r = g_1^{s'}g_2^{r'} \Rightarrow
+    g_1 = g_2^\frac{r' - r}{s - s'}$. This is in contradiction to the assumption that DLOG is hard in $\mathbb{G}$.
+    Of course, if Alice is computationally-unbounded she can calculate $t$ s.t. $g_1 = g_2^t$ and switch
+    the value of $(s, r)$ to $(s', r')$ while keeping that $t = \frac{r' - r}{s - s'}$.
 \end{paragraph}
 
 \begin{paragraph}
