@@ -122,7 +122,38 @@
 
 \section{Coin tossing with QR}
 \begin{paragraph}
-    a 
+    a Assuming both players are honest, the probability for Bob to win is \\ \(\Pr(a \neq b) = \frac{1}{2}\).
+    If Alice is honest then \(A\) will equal \(r^2x^a \tpmod n\), and since both \(a,b\) are chosen randomly from \(\{0, 1\}\),
+    the chance of them being different is \(\frac{1}{2}\).
+\end{paragraph}
+
+\begin{paragraph}
+    b The security of this protocol is dependent on the QR assumption - given \(n = pq\), where \(p, q\) are primes,
+    without knowing the factorization of \(n\) it is considered hard to extract SQRT or to test if \(x \in QR_n\).
+\end{paragraph}
+
+\begin{paragraph}
+    c Yes, Bob can cheat Alice. Using this WonderBox\textsuperscript{\textcopyright}, Bob can calculate whether \(A \in QR_n\), or
+    \(A \in QNR_n^+\).
+    If \(A \in QR_n \Rightarrow r^2x^a \in QR_n \Rightarrow x^a \in QR_n \Rightarrow a = 0\).
+    If \(A \in QNR_n^+ \Rightarrow r^2x^a \in QNR_n^+ \Rightarrow x^a \in QNR_n^+ \Rightarrow a = 1\). \\
+    Bob can find \(a\) before the reveal and choose the correct \(b\) to go to the ballet.
+\end{paragraph}
+
+\begin{paragraph}
+    d Alice can not cheat. After committing to a value \(A\), we've seen that \\ \(A \in QR_n \iff a = 0\). This means Alice
+    can't modify the revealed \(a\) and \(\Pr(a = b) = \frac{1}{2}\) for every \((A, a, r)\).
+\end{paragraph}
+
+\begin{paragraph}
+    e Bob can request to know \(p, q\), with whom he can calculate \(A^\frac{p - 1}{2} = 1 \tpmod p\) and \(A^\frac{q - 1}{2} = 1\tpmod q\).
+    If so then \(A \in QR_n\), and as we've seen, Bob can know the value of \(a\).
+\end{paragraph}
+
+\begin{paragraph}
+    f Gershon will choose \(y \leftarrow \mathbb{Z}_n^*\) and give Alice \(x = y^2\) and \(y\). Alice will send to Bob \(A = r^2x\).
+    If Bob sends \(b = 1\) she'll reveal \(r, a = 1\). If Bob sends \(b = 0\), Alice will reveal \(r' = ry, a = 0\).
+    Bob will check that indeed \(A = r'^2 = (ry)^2 = r^2y^2 = r^2x\).
 \end{paragraph}
 
 \end{document}
