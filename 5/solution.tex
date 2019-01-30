@@ -38,7 +38,7 @@
 \end{paragraph}
 
 \begin{paragraph}
-    d Alice can indeed cheat, given the ability to cheat the scheme's parameters.
+    d Alice can indeed cheat, given the ability to choose the scheme's parameters.
     Alice can choose $g_1, g_2$ s.t. $g_1 = g_2^t$. If after publishing a commitment $comm_r(s) = C = g_1^sg_2^r \tpmod p$,
     she would like to reveal $(s', r')$ instead of $(s, r)$, she can calculate $r' = r + t(s - s')$. And indeed, Bob will 
     calculate $C' = g_1^{s'}g_2^{r'} = g_1^{s'}g_2^{r + t(s-s')} = g_1^{s'}g_2^{t(s-s')}g_2^r = g_1^sg_2^r = C$.
